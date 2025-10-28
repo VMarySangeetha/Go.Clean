@@ -7,19 +7,31 @@ const ideas = [
     icon: Video,
     title: 'Video Tutorials',
     description: 'Watch step-by-step guides on proper recycling techniques and creative upcycling projects.',
-    resources: ['Plastic bottle crafts', 'Composting basics', 'E-waste disposal']
+    resources: [
+      { text: 'Plastic bottle crafts', link: 'https://www.youtube.com/results?search_query=plastic+bottle+recycling+crafts' },
+      { text: 'Composting basics', link: 'https://www.youtube.com/results?search_query=composting+basics+tutorial' },
+      { text: 'E-waste disposal', link: 'https://www.youtube.com/results?search_query=electronic+waste+recycling+guide' }
+    ]
   },
   {
     icon: FileText,
     title: 'Recycling Flowcharts',
     description: 'Easy-to-follow flowcharts to help you identify what can and cannot be recycled.',
-    resources: ['Household waste sorting', 'Material identification', 'Collection guidelines']
+    resources: [
+      { text: 'Household waste sorting', link: 'https://www.youtube.com/results?search_query=household+waste+sorting+guide' },
+      { text: 'Material identification', link: 'https://www.youtube.com/results?search_query=recycling+material+identification' },
+      { text: 'Collection guidelines', link: 'https://www.youtube.com/results?search_query=recycling+collection+guidelines' }
+    ]
   },
   {
     icon: Lightbulb,
     title: 'Quick Home Remedies',
     description: 'Simple solutions for reducing waste and repurposing items at home.',
-    resources: ['DIY cleaning products', 'Food waste reduction', 'Reusable alternatives']
+    resources: [
+      { text: 'DIY cleaning products', link: 'https://www.youtube.com/results?search_query=diy+eco+friendly+cleaning+products' },
+      { text: 'Food waste reduction', link: 'https://www.youtube.com/results?search_query=reduce+food+waste+at+home' },
+      { text: 'Reusable alternatives', link: 'https://www.youtube.com/results?search_query=reusable+alternatives+zero+waste' }
+    ]
   }
 ];
 
@@ -64,9 +76,16 @@ const RecyclingIdeas = () => {
               <CardContent>
                 <ul className="space-y-2">
                   {idea.resources.map((resource, idx) => (
-                    <li key={idx} className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <li key={idx} className="flex items-center gap-2 text-sm">
                       <div className="w-1.5 h-1.5 rounded-full bg-accent" />
-                      {resource}
+                      <a 
+                        href={resource.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-muted-foreground hover:text-accent hover:underline transition-colors"
+                      >
+                        {resource.text}
+                      </a>
                     </li>
                   ))}
                 </ul>

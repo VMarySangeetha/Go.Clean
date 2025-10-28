@@ -2,6 +2,7 @@ import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
 import ReportDumping from '@/components/ReportDumping';
 import RecyclingIdeas from '@/components/RecyclingIdeas';
+import About from '@/components/About';
 import Footer from '@/components/Footer';
 
 const Index = () => {
@@ -12,6 +13,7 @@ const Index = () => {
         <Hero />
         <ReportDumping />
         <RecyclingIdeas />
+        <About />
       </main>
       <Footer />
     </div>
