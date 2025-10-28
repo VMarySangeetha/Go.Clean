@@ -2,6 +2,11 @@ import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import heroEnvironment from '@/assets/hero-environment.jpg';
 import communityClear from '@/assets/community-clean.jpg';
+import heroSegregation from '@/assets/hero-segregation.jpg';
+import heroPlanet from '@/assets/hero-planet.jpg';
+import heroOcean from '@/assets/hero-ocean.jpg';
+import heroGreenCity from '@/assets/hero-green-city.jpg';
+import heroZeroWaste from '@/assets/hero-zero-waste.jpg';
 import { Button } from '@/components/ui/button';
 
 const slides = [
@@ -9,6 +14,31 @@ const slides = [
     image: heroEnvironment,
     title: 'BIN IT RIGHT, WIN THE FIGHT',
     subtitle: 'Together we can make our environment cleaner and healthier'
+  },
+  {
+    image: heroSegregation,
+    title: 'SORT IT OUT, SAVE THE EARTH',
+    subtitle: 'Proper waste segregation starts with you - every item in the right bin matters'
+  },
+  {
+    image: heroPlanet,
+    title: 'ONE PLANET, ONE CHANCE',
+    subtitle: 'Protect our home - reduce, reuse, recycle for a sustainable future'
+  },
+  {
+    image: heroOcean,
+    title: 'KEEP OUR OCEANS CLEAN',
+    subtitle: 'Join the movement to prevent plastic pollution and protect marine life'
+  },
+  {
+    image: heroGreenCity,
+    title: 'GREEN CITIES, HEALTHY LIVES',
+    subtitle: 'Building sustainable communities through responsible waste management'
+  },
+  {
+    image: heroZeroWaste,
+    title: 'ZERO WASTE, INFINITE IMPACT',
+    subtitle: 'Small changes in daily habits create massive environmental benefits'
   },
   {
     image: communityClear,
