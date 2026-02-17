@@ -11,7 +11,7 @@ const bins = [
 
 const BinQRGenerator = () => {
   return (
-    <div style={{ padding: 20 }}>
+    <div style={{ padding: 50}}>
       <h2>Dustbin QR Codes</h2>
 
       <div style={{ display: "flex", flexWrap: "wrap", gap: 30 }}>

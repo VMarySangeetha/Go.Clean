@@ -1,40 +1,52 @@
 import { Leaf } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
+  const navigate = useNavigate();
+
   return (
-    <nav className="sticky top-0 z-50 bg-card border-b border-border shadow-soft">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          <div className="flex items-center gap-2">
-            <Leaf className="w-8 h-8 text-primary" />
-            <span className="text-xl font-bold text-foreground">EcoReport</span>
+    <nav className="fixed top-0 left-0 w-full z-50 bg-[#1f3b57]/80 backdrop-blur-md shadow-lg">
+      <div className="max-w-7xl mx-auto px-7">
+        <div className="flex items-center justify-between h-12 text-white">
+
+          {/* LOGO */}
+          <div
+            className="flex items-center gap-2 cursor-pointer"
+            onClick={() => navigate('/')}
+          >
+            <Leaf className="w-7 h-7 text-green-400" />
+            <span className="text-xl font-bold tracking-wide">GO.CLEAN</span>
           </div>
-          
-          <div className="hidden md:flex items-center gap-8">
-            <a 
-              href="#home" 
-              className="text-foreground hover:text-primary transition-colors font-medium"
+
+          {/* MENU */}
+          <div className="hidden md:flex items-center gap-7 text-sm font-medium">
+            <button
+              onClick={() => navigate('/')}
+              className="hover:text-green-300 transition"
             >
-              Home
-            </a>
-            <a 
-              href="#report" 
-              className="text-foreground hover:text-primary transition-colors font-medium"
+              HOME
+            </button>
+
+            <button
+              onClick={() => navigate('/recycling')}
+              className="hover:text-green-300 transition"
             >
-              Report Dumping
-            </a>
-            <a 
-              href="#ideas" 
-              className="text-foreground hover:text-primary transition-colors font-medium"
+              RECYCLING
+            </button>
+
+            <button
+              onClick={() => navigate('/report')}
+              className="hover:text-green-300 transition"
             >
-              Recycling Ideas
-            </a>
-            <a 
-              href="#about" 
-              className="text-foreground hover:text-primary transition-colors font-medium"
+              REPORT
+            </button>
+
+            <button
+              onClick={() => navigate('/about')}
+              className="hover:text-green-300 transition"
             >
-              About
-            </a>
+              ABOUT
+            </button>
           </div>
         </div>
       </div>

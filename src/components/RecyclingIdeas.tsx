@@ -1,98 +1,74 @@
-import { Recycle, Video, FileText, Lightbulb } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import recyclingIdeasImg from '@/assets/recycling-ideas.jpg';
-
-const ideas = [
-  {
-    icon: Video,
-    title: 'Video Tutorials',
-    description: 'Watch step-by-step guides on proper recycling techniques and creative upcycling projects.',
-    resources: [
-      { text: 'Plastic bottle crafts', link: 'https://www.youtube.com/results?search_query=plastic+bottle+recycling+crafts' },
-      { text: 'Composting basics', link: 'https://www.youtube.com/results?search_query=composting+basics+tutorial' },
-      { text: 'E-waste disposal', link: 'https://www.youtube.com/results?search_query=electronic+waste+recycling+guide' }
-    ]
-  },
-  {
-    icon: FileText,
-    title: 'Recycling Flowcharts',
-    description: 'Easy-to-follow flowcharts to help you identify what can and cannot be recycled.',
-    resources: [
-      { text: 'Household waste sorting', link: 'https://www.youtube.com/results?search_query=household+waste+sorting+guide' },
-      { text: 'Material identification', link: 'https://www.youtube.com/results?search_query=recycling+material+identification' },
-      { text: 'Collection guidelines', link: 'https://www.youtube.com/results?search_query=recycling+collection+guidelines' }
-    ]
-  },
-  {
-    icon: Lightbulb,
-    title: 'Quick Home Remedies',
-    description: 'Simple solutions for reducing waste and repurposing items at home.',
-    resources: [
-      { text: 'DIY cleaning products', link: 'https://www.youtube.com/results?search_query=diy+eco+friendly+cleaning+products' },
-      { text: 'Food waste reduction', link: 'https://www.youtube.com/results?search_query=reduce+food+waste+at+home' },
-      { text: 'Reusable alternatives', link: 'https://www.youtube.com/results?search_query=reusable+alternatives+zero+waste' }
-    ]
-  }
-];
+import heroEnvironment from '@/assets/hero-environment.jpg';
 
 const RecyclingIdeas = () => {
+
+  const openVideo = (type: string) => {
+    let url = "";
+
+    if (type === "solid") {
+      url = "https://www.youtube.com/results?search_query=solid+waste+management+recycling+process";
+    } 
+    else if (type === "organic") {
+      url = "https://www.youtube.com/results?search_query=organic+waste+composting+at+home";
+    } 
+    else if (type === "hazardous") {
+      url = "https://www.youtube.com/results?search_query=hazardous+waste+disposal+and+ewaste+management";
+    }
+
+    window.open(url, "_blank");
+  };
+
   return (
-    <section id="ideas" className="py-20 px-4 bg-background">
-      <div className="container mx-auto max-w-6xl">
-        <div className="text-center mb-12 animate-fade-in">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-accent/10 mb-4">
-            <Recycle className="w-8 h-8 text-accent" />
-          </div>
-          <h2 className="text-4xl font-bold mb-4 text-foreground">Quick Recycling Ideas</h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Learn practical tips and creative solutions for reducing waste and recycling better
-          </p>
-        </div>
+    <section
+      className="min-h-screen flex flex-col items-center justify-center text-center px-4"
+      style={{
+        backgroundImage: `url(${heroEnvironment})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
+      {/* Dark overlay */}
+      <div className="absolute inset-0 bg-black/30" />
 
+      <div className="relative z-10 w-full max-w-3xl text-white">
+
+        {/* TITLE PILL */}
         <div className="mb-12">
-          <img 
-            src={recyclingIdeasImg} 
-            alt="Recycling bins and waste sorting" 
-            className="w-full max-w-4xl mx-auto rounded-lg shadow-medium"
-          />
+          <div className="inline-block bg-green-600 px-10 py-3 rounded-full text-lg md:text-xl font-semibold shadow-lg">
+            RECYCLING IDEAS
+          </div>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6">
-          {ideas.map((idea, index) => (
-            <Card 
-              key={index}
-              className="shadow-soft hover:shadow-medium transition-shadow duration-300 animate-fade-in"
-              style={{ animationDelay: `${index * 100}ms` }}
-            >
-              <CardHeader>
-                <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center mb-4">
-                  <idea.icon className="w-6 h-6 text-accent" />
-                </div>
-                <CardTitle className="text-xl">{idea.title}</CardTitle>
-                <CardDescription className="text-base">
-                  {idea.description}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-2">
-                  {idea.resources.map((resource, idx) => (
-                    <li key={idx} className="flex items-center gap-2 text-sm">
-                      <div className="w-1.5 h-1.5 rounded-full bg-accent" />
-                      <a 
-                        href={resource.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-muted-foreground hover:text-accent hover:underline transition-colors"
-                      >
-                        {resource.text}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </CardContent>
-            </Card>
-          ))}
+        {/* 3 GREEN CATEGORY BUTTONS */}
+        <div className="flex flex-col md:flex-row gap-6 justify-center items-center">
+          
+          <button
+            onClick={() => openVideo("solid")}
+            className="bg-green-800 hover:bg-green-900 px-8 py-4 rounded-xl text-white font-semibold w-64 shadow-lg"
+          >
+            SOLID WASTE
+          </button>
+
+          <button
+            onClick={() => openVideo("organic")}
+            className="bg-green-800 hover:bg-green-900 px-8 py-4 rounded-xl text-white font-semibold w-64 shadow-lg"
+          >
+            ORGANIC WASTE
+          </button>
+
+          <button
+            onClick={() => openVideo("hazardous")}
+            className="bg-green-800 hover:bg-green-900 px-8 py-4 rounded-xl text-white font-semibold w-64 shadow-lg"
+          >
+            LIQUID & HAZARDOUS WASTE
+          </button>
+
         </div>
+
+        {/* FOOTER QUOTE */}
+        <p className="mt-14 text-sm md:text-base opacity-90">
+          "When we keep our surroundings clean, we protect not just nature, but our future."
+        </p>
       </div>
     </section>
   );
