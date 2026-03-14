@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AdminDashboard from "@/pages/AdminDashboard";
+import ScanQR from "@/pages/ScanQR";
 
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -55,6 +56,7 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
 
             <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/scan" element={<ScanQR />} />
           </Routes>
 
           {/* FOOTER */}
