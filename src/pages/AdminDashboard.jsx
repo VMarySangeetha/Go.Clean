@@ -7,7 +7,7 @@ const AdminDashboard = () => {
   const fetchReports = async () => {
     try {
 
-      const res = await fetch("https://YOUR_RENDER_URL/api/reports");
+      const res = await fetch("https://go-clean-8c5n.onrender.com/api/reports");
 
       const data = await res.json();
 
