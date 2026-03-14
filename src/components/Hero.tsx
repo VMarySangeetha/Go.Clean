@@ -30,7 +30,7 @@ const Hero = () => {
 
   return (
 
-    <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-5 overflow-hidden">
+    <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 overflow-hidden">
 
       {/* Background Images */}
       {images.map((img, index) => (
@@ -45,7 +45,7 @@ const Hero = () => {
 
       ))}
 
-      {/* Overlay */}
+      {/* Dark overlay */}
       <div className="absolute inset-0 bg-black/50" />
 
       {/* TEXT CONTENT */}
@@ -58,7 +58,7 @@ const Hero = () => {
 
         </h1>
 
-        <p className="text-sm sm:text-base md:text-lg italic opacity-90">
+        <p className="text-sm sm:text-base md:text-lg italic opacity-90 mb-12">
           Every small action today creates a cleaner tomorrow.
         </p>
 
@@ -66,7 +66,7 @@ const Hero = () => {
 
 
       {/* BOTTOM BUTTONS */}
-      <div className="absolute bottom-24 sm:bottom-16 z-10 flex flex-col sm:flex-row gap-4 sm:gap-6">
+      <div className="absolute bottom-20 sm:bottom-16 z-10 flex flex-col sm:flex-row gap-4 sm:gap-6">
 
         <Button
           onClick={() => navigate("/recycling")}
@@ -85,7 +85,7 @@ const Hero = () => {
       </div>
 
 
-      {/* FLOATING CAMERA BUTTON */}
+      {/* CAMERA BUTTON (BOTTOM RIGHT) */}
       <button
         onClick={() => navigate("/scan")}
         className="fixed bottom-6 right-6 sm:bottom-8 sm:right-8 z-20 bg-white hover:bg-gray-100 text-black p-3 sm:p-4 rounded-full shadow-xl transition transform hover:scale-110"
