@@ -1,8 +1,14 @@
+import { useState } from "react";
 import logo from "@/assets/logo.jpg";
 import { NavLink } from "react-router-dom";
+import { Menu, X } from "lucide-react";
 
 const Navbar = () => {
+
+  const [open,setOpen] = useState(false);
+
   return (
+
     <nav className="fixed top-0 left-0 w-full z-50 bg-[#1f3b57]/90 backdrop-blur-md shadow-lg">
 
       <div className="max-w-7xl mx-auto px-6">
@@ -17,35 +23,28 @@ const Navbar = () => {
             </span>
           </NavLink>
 
+
           {/* DESKTOP MENU */}
           <div className="hidden md:flex items-center gap-8 text-sm font-semibold">
 
-            <NavLink
-              to="/"
-              className="hover:text-green-400 transition"
-            >
+            <NavLink to="/" className="hover:text-green-400">
               HOME
             </NavLink>
 
-            <NavLink
-              to="/recycling"
-              className="hover:text-green-400 transition"
-            >
+            <NavLink to="/recycling" className="hover:text-green-400">
               RECYCLING
             </NavLink>
 
-            <NavLink
-              to="/report"
-              className="hover:text-green-400 transition"
-            >
+            <NavLink to="/report" className="hover:text-green-400">
               REPORT
             </NavLink>
 
-            <NavLink
-              to="/about"
-              className="hover:text-green-400 transition"
-            >
+            <NavLink to="/about" className="hover:text-green-400">
               ABOUT
+            </NavLink>
+
+            <NavLink to="/my-reports" className="hover:text-green-400">
+              MY REPORTS
             </NavLink>
 
             <NavLink
@@ -64,38 +63,65 @@ const Navbar = () => {
 
           </div>
 
-          {/* MOBILE MENU (ONLY ABOUT + LOGIN + SIGNUP) */}
-          <div className="flex md:hidden items-center gap-4 text-sm font-semibold">
 
-            <NavLink
-              to="/about"
-              className="hover:text-green-400"
-            >
-              ABOUT
-            </NavLink>
-
-            <NavLink
-              to="/login"
-              className="hover:text-green-400"
-            >
-              LOGIN
-            </NavLink>
-
-            <NavLink
-              to="/signup"
-              className="hover:text-green-400"
-            >
-              SIGNUP
-            </NavLink>
-
-          </div>
+          {/* MOBILE MENU BUTTON */}
+          <button
+            className="md:hidden"
+            onClick={()=>setOpen(!open)}
+          >
+            {open ? <X size={26}/> : <Menu size={26}/>}
+          </button>
 
         </div>
 
       </div>
 
+
+      {/* MOBILE DROPDOWN */}
+      {open && (
+
+        <div className="md:hidden bg-[#1f3b57] text-white px-6 py-4 space-y-4">
+
+          <NavLink
+            to="/about"
+            onClick={()=>setOpen(false)}
+            className="block"
+          >
+            ABOUT
+          </NavLink>
+
+          <NavLink
+            to="/my-reports"
+            onClick={()=>setOpen(false)}
+            className="block"
+          >
+            MY REPORTS
+          </NavLink>
+
+          <NavLink
+            to="/login"
+            onClick={()=>setOpen(false)}
+            className="block"
+          >
+            LOGIN
+          </NavLink>
+
+          <NavLink
+            to="/signup"
+            onClick={()=>setOpen(false)}
+            className="block"
+          >
+            SIGNUP
+          </NavLink>
+
+        </div>
+
+      )}
+
     </nav>
+
   );
+
 };
 
 export default Navbar;

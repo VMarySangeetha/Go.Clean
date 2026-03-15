@@ -7,6 +7,7 @@ import AdminDashboard from "@/pages/AdminDashboard";
 import ScanQR from "@/pages/ScanQR";
 import Login from "@/pages/Login";
 import Signup from "@/pages/Signup";
+import MyReports from "@/pages/MyReports";
 
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -61,6 +62,7 @@ const App = () => (
             <Route path="/scan" element={<ScanQR />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/my-reports" element={<MyReports />} />
           </Routes>
 
           {/* FOOTER */}

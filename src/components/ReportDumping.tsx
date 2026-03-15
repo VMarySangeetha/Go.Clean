@@ -10,9 +10,9 @@ import { useToast } from "@/hooks/use-toast";
 const ReportDumping = () => {
 
   const { toast } = useToast();
+  const [searchParams] = useSearchParams();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [searchParams] = useSearchParams();
 
   const [binId, setBinId] = useState("");
   const [location, setLocation] = useState("Fetching location...");
@@ -20,15 +20,28 @@ const ReportDumping = () => {
 
   const [phone, setPhone] = useState("");
   const [description, setDescription] = useState("");
-  const [file, setFile] = useState(null);
 
-  // Detect bin ID from QR
+  const [file, setFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState("");
+
+  /* -------------------------------
+     Get logged in user
+  --------------------------------*/
+  const user = JSON.parse(localStorage.getItem("user") || "null");
+
+
+  /* -------------------------------
+     Detect bin ID from QR
+  --------------------------------*/
   useEffect(() => {
     const id = searchParams.get("binId");
     if (id) setBinId(id);
   }, [searchParams]);
 
-  // Detect GPS
+
+  /* -------------------------------
+     Detect GPS Location
+  --------------------------------*/
   useEffect(() => {
 
     if (navigator.geolocation) {
@@ -51,14 +64,33 @@ const ReportDumping = () => {
 
   }, []);
 
-  const handleSubmit = async (e) => {
+
+  /* -------------------------------
+     Handle Image Preview
+  --------------------------------*/
+  const handleFileChange = (e:any) => {
+
+    const selected = e.target.files[0];
+
+    if (selected) {
+      setFile(selected);
+      setPreview(URL.createObjectURL(selected));
+    }
+
+  };
+
+
+  /* -------------------------------
+     Submit Report
+  --------------------------------*/
+  const handleSubmit = async (e:any) => {
 
     e.preventDefault();
 
     if (!issueType) {
       toast({
-        title: "Please select issue type",
-        description: "Select the type of problem before submitting."
+        title: "Select issue type",
+        description: "Please choose the problem type."
       });
       return;
     }
@@ -74,6 +106,11 @@ const ReportDumping = () => {
       formData.append("location", location);
       formData.append("phone", phone);
       formData.append("description", description);
+
+      /* attach userId if logged in */
+      if (user) {
+        formData.append("userId", user._id);
+      }
 
       if (file) {
         formData.append("image", file);
@@ -93,18 +130,21 @@ const ReportDumping = () => {
 
         toast({
           title: "Report Submitted",
-          description: "Your complaint has been recorded."
+          description: "Thank you for helping keep the city clean!"
         });
 
+        /* reset form */
         setPhone("");
         setDescription("");
         setIssueType("");
+        setFile(null);
+        setPreview("");
 
       } else {
 
         toast({
           title: "Submission Failed",
-          description: result.message || "Something went wrong."
+          description: result.message || "Something went wrong"
         });
 
       }
@@ -113,7 +153,7 @@ const ReportDumping = () => {
 
       toast({
         title: "Server Error",
-        description: "Unable to submit report."
+        description: "Unable to submit report"
       });
 
     }
@@ -121,6 +161,7 @@ const ReportDumping = () => {
     setIsSubmitting(false);
 
   };
+
 
   return (
 
@@ -152,7 +193,7 @@ const ReportDumping = () => {
               </Label>
 
               <Input
-                value={binId}
+                value={binId || "Manual Report"}
                 readOnly
                 className="bg-gray-100 h-11"
               />
@@ -252,14 +293,23 @@ const ReportDumping = () => {
               <Input
                 type="file"
                 accept="image/*"
-                onChange={(e) => setFile(e.target.files[0])}
+                onChange={handleFileChange}
                 className="h-11"
               />
+
+              {/* preview */}
+              {preview && (
+                <img
+                  src={preview}
+                  alt="preview"
+                  className="mt-3 rounded-lg max-h-40 object-cover"
+                />
+              )}
 
             </div>
 
 
-            {/* SUBMIT BUTTON */}
+            {/* SUBMIT */}
             <Button
               type="submit"
               className="w-full bg-green-700 hover:bg-green-800 text-white py-3 text-base rounded-xl"
@@ -279,6 +329,7 @@ const ReportDumping = () => {
     </section>
 
   );
+
 };
 
 export default ReportDumping;
