@@ -1,82 +1,101 @@
 import logo from "@/assets/logo.jpg";
 import { NavLink } from "react-router-dom";
-import { useState } from "react";
-import { Menu, X } from "lucide-react";
 
 const Navbar = () => {
-
-  const [open, setOpen] = useState(false);
-
   return (
+    <nav className="fixed top-0 left-0 w-full z-50 bg-[#1f3b57]/90 backdrop-blur-md shadow-lg">
 
-    <nav className="fixed top-0 left-0 w-full z-50 bg-[#1f3b57]/95 backdrop-blur-md shadow-lg">
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-7">
+      <div className="max-w-7xl mx-auto px-6">
 
         <div className="flex items-center justify-between h-14 text-white">
 
           {/* LOGO */}
           <NavLink to="/" className="flex items-center gap-2">
-
-            <img
-              src={logo}
-              alt="GO CLEAN"
-              className="h-7 sm:h-8"
-            />
-
-            <span className="text-lg sm:text-xl font-bold tracking-wide">
+            <img src={logo} alt="GO CLEAN" className="h-8 w-auto" />
+            <span className="text-lg md:text-xl font-bold tracking-wide">
               GO.CLEAN
             </span>
-
           </NavLink>
 
           {/* DESKTOP MENU */}
           <div className="hidden md:flex items-center gap-8 text-sm font-semibold">
 
-            <NavLink to="/">HOME</NavLink>
-            <NavLink to="/recycling">RECYCLING</NavLink>
-            <NavLink to="/report">REPORT</NavLink>
-            <NavLink to="/about">ABOUT</NavLink>
+            <NavLink
+              to="/"
+              className="hover:text-green-400 transition"
+            >
+              HOME
+            </NavLink>
+
+            <NavLink
+              to="/recycling"
+              className="hover:text-green-400 transition"
+            >
+              RECYCLING
+            </NavLink>
+
+            <NavLink
+              to="/report"
+              className="hover:text-green-400 transition"
+            >
+              REPORT
+            </NavLink>
+
+            <NavLink
+              to="/about"
+              className="hover:text-green-400 transition"
+            >
+              ABOUT
+            </NavLink>
+
+            <NavLink
+              to="/login"
+              className="bg-green-600 px-4 py-1 rounded-full hover:bg-green-700"
+            >
+              LOGIN
+            </NavLink>
+
+            <NavLink
+              to="/signup"
+              className="border border-white px-4 py-1 rounded-full hover:bg-white hover:text-[#1f3b57]"
+            >
+              SIGNUP
+            </NavLink>
 
           </div>
 
-          {/* MOBILE MENU BUTTON */}
-          <button
-            onClick={() => setOpen(!open)}
-            className="md:hidden"
-          >
-            {open ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          {/* MOBILE MENU (ONLY ABOUT + LOGIN + SIGNUP) */}
+          <div className="flex md:hidden items-center gap-4 text-sm font-semibold">
+
+            <NavLink
+              to="/about"
+              className="hover:text-green-400"
+            >
+              ABOUT
+            </NavLink>
+
+            <NavLink
+              to="/login"
+              className="hover:text-green-400"
+            >
+              LOGIN
+            </NavLink>
+
+            <NavLink
+              to="/signup"
+              className="hover:text-green-400"
+            >
+              SIGNUP
+            </NavLink>
+
+          </div>
 
         </div>
 
       </div>
 
-      {/* MOBILE MENU */}
-      {open && (
-
-        <div className="md:hidden bg-[#1f3b57] text-white px-6 pb-4 flex flex-col gap-4">
-
-          <NavLink to="/about" onClick={() => setOpen(false)}>
-            About
-          </NavLink>
-
-          <NavLink to="/login" onClick={() => setOpen(false)}>
-            Login
-          </NavLink>
-
-          <NavLink to="/signup" onClick={() => setOpen(false)}>
-            Signup
-          </NavLink>
-
-        </div>
-
-      )}
-
     </nav>
-
   );
-
 };
 
 export default Navbar;

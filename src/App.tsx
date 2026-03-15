@@ -5,6 +5,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AdminDashboard from "@/pages/AdminDashboard";
 import ScanQR from "@/pages/ScanQR";
+import Login from "@/pages/Login";
+import Signup from "@/pages/Signup";
 
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -57,6 +59,8 @@ const App = () => (
 
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/scan" element={<ScanQR />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
           </Routes>
 
           {/* FOOTER */}
