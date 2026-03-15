@@ -1,28 +1,44 @@
 import mongoose from "mongoose";
 
 const reportSchema = new mongoose.Schema({
-  binId: {
-    type: String,
+
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User"
   },
+
+  binId: {
+    type: String
+  },
+
   issueType: {
     type: String,
+    required: true
   },
+
   location: {
     type: String,
+    required: true
   },
+
   phone: {
-    type: String,
+    type: String
   },
+
   description: {
-    type: String,
+    type: String
   },
+
   image: {
+    type: String
+  },
+
+  status: {
     type: String,
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
+    enum: ["Reported", "Assigned", "In Progress", "Completed"],
+    default: "Reported"
+  }
+
+}, { timestamps: true });
 
 export default mongoose.model("Report", reportSchema);
