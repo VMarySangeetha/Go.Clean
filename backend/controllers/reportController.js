@@ -88,9 +88,7 @@ export const updateReportStatus = async (req, res) => {
 
     await report.save();
 
-
-    /* GIVE COINS ONLY ONCE */
-
+    // Award coins only once
     if (
       status === "Completed" &&
       previousStatus !== "Completed" &&
@@ -102,21 +100,14 @@ export const updateReportStatus = async (req, res) => {
         { $inc: { coins: 10 } }
       );
 
-      console.log("10 coins awarded to user:", report.userId);
-
     }
 
-    res.json({
-      message: "Status updated successfully",
-      report
-    });
+    res.json(report);
 
   } catch (error) {
 
-    console.error(error);
-
     res.status(500).json({
-      message: "Error updating report status"
+      message: "Error updating status"
     });
 
   }

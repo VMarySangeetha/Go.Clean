@@ -7,7 +7,6 @@ const MyReports = () => {
 
   const user = JSON.parse(localStorage.getItem("user") || "null");
 
-
   const rewards = [
     { id:1, name:"Tree Plantation Certificate", coins:20 },
     { id:2, name:"Clean Citizen Badge", coins:40 },
@@ -53,19 +52,45 @@ const MyReports = () => {
   },[user]);
 
 
-  const redeemReward = (reward:any)=>{
+  /* REDEEM REWARD (Backend API) */
 
-    if(coins < reward.coins){
+  const redeemReward = async (reward:any)=>{
 
-      alert("Not enough coins");
+    try{
 
-      return;
+      const res = await fetch(
+        "https://go-clean-8c5n.onrender.com/api/rewards/redeem",
+        {
+          method:"POST",
+          headers:{
+            "Content-Type":"application/json"
+          },
+          body:JSON.stringify({
+            userId:user._id,
+            cost:reward.coins
+          })
+        }
+      );
+
+      const data = await res.json();
+
+      if(res.ok){
+
+        setCoins(data.coins);
+
+        alert(`Reward Redeemed: ${reward.name}`);
+
+      }else{
+
+        alert(data.message);
+
+      }
+
+    }catch(error){
+
+      console.log(error);
 
     }
-
-    setCoins(coins - reward.coins);
-
-    alert(`You redeemed: ${reward.name}`);
 
   };
 
@@ -81,7 +106,7 @@ const MyReports = () => {
   }
 
 
-  const completed = reports.filter(r => r.status === "Completed").length;
+  const completed = reports.filter((r:any)=>r.status === "Completed").length;
 
 
   return (
@@ -94,6 +119,7 @@ const MyReports = () => {
 
 
       {/* USER INFO */}
+
       <div className="bg-white rounded-xl shadow p-6 mb-8">
 
         <h2 className="text-xl font-semibold mb-4">
@@ -129,6 +155,7 @@ const MyReports = () => {
 
 
       {/* REPORT LIST */}
+
       <h2 className="text-2xl font-semibold mb-4">
         My Reports
       </h2>
@@ -178,7 +205,8 @@ const MyReports = () => {
       </div>
 
 
-      {/* REWARDS SECTION */}
+      {/* REWARDS */}
+
       <h2 className="text-2xl font-semibold mb-4">
         Redeem Rewards
       </h2>
@@ -204,7 +232,7 @@ const MyReports = () => {
 
               <button
                 onClick={()=>redeemReward(reward)}
-                className="bg-green-600 text-white px-4 py-2 rounded"
+                className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
               >
                 Redeem
               </button>
