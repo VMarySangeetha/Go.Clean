@@ -12,19 +12,25 @@ const Login = () => {
 
     e.preventDefault();
 
-    const res = await fetch("https://go-clean-8c5n.onrender.com/api/auth/login",{
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json"
-      },
-      body:JSON.stringify({email,password})
-    });
+    const res = await fetch(
+      "https://go-clean-8c5n.onrender.com/api/auth/login",
+      {
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json"
+        },
+        body:JSON.stringify({email,password})
+      }
+    );
 
     const data = await res.json();
 
     if(res.ok){
 
+      // store user permanently
       localStorage.setItem("user",JSON.stringify(data.user));
+
+      alert(`Welcome ${data.user.name}`);
 
       navigate("/");
 
@@ -38,7 +44,7 @@ const Login = () => {
 
   return (
 
-    <div className="min-h-screen flex items-center justify-center">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
 
       <form
         onSubmit={handleLogin}
@@ -51,7 +57,7 @@ const Login = () => {
 
         <input
           placeholder="Email"
-          className="border w-full mb-4 p-2"
+          className="border w-full mb-4 p-2 rounded"
           value={email}
           onChange={(e)=>setEmail(e.target.value)}
         />
@@ -59,18 +65,19 @@ const Login = () => {
         <input
           type="password"
           placeholder="Password"
-          className="border w-full mb-4 p-2"
+          className="border w-full mb-4 p-2 rounded"
           value={password}
           onChange={(e)=>setPassword(e.target.value)}
         />
 
-        <button className="bg-green-600 text-white w-full p-2 rounded">
+        <button className="bg-green-600 hover:bg-green-700 text-white w-full p-2 rounded">
           Login
         </button>
 
       </form>
 
     </div>
+
   );
 
 };
