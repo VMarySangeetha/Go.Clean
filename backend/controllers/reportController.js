@@ -1,9 +1,10 @@
 import Report from "../models/Report.js";
-
 import User from "../models/user.js";
 
 
-// CREATE REPORT
+/* ===============================
+   CREATE REPORT
+================================*/
 export const createReport = async (req, res) => {
 
   try {
@@ -29,9 +30,10 @@ export const createReport = async (req, res) => {
 
   } catch (error) {
 
+    console.error(error);
+
     res.status(500).json({
-      message: "Error submitting report",
-      error
+      message: "Error submitting report"
     });
 
   }
@@ -39,7 +41,9 @@ export const createReport = async (req, res) => {
 };
 
 
-// GET ALL REPORTS (ADMIN)
+/* ===============================
+   GET ALL REPORTS (ADMIN)
+================================*/
 export const getReports = async (req, res) => {
 
   try {
@@ -50,6 +54,8 @@ export const getReports = async (req, res) => {
 
   } catch (error) {
 
+    console.error(error);
+
     res.status(500).json({
       message: "Error fetching reports"
     });
@@ -59,43 +65,68 @@ export const getReports = async (req, res) => {
 };
 
 
-
-// UPDATE REPORT STATUS
+/* ===============================
+   UPDATE REPORT STATUS
+================================*/
 export const updateReportStatus = async (req, res) => {
 
   try {
 
     const { status } = req.body;
 
-    const report = await Report.findByIdAndUpdate(
-      req.params.id,
-      { status },
-      { new: true }
-    );
+    const report = await Report.findById(req.params.id);
 
-    // If completed → give coins
-    if (status === "Completed" && report.userId) {
+    if (!report) {
+      return res.status(404).json({
+        message: "Report not found"
+      });
+    }
+
+    const previousStatus = report.status;
+
+    report.status = status;
+
+    await report.save();
+
+
+    /* GIVE COINS ONLY ONCE */
+
+    if (
+      status === "Completed" &&
+      previousStatus !== "Completed" &&
+      report.userId
+    ) {
 
       await User.findByIdAndUpdate(
         report.userId,
         { $inc: { coins: 10 } }
       );
 
+      console.log("10 coins awarded to user:", report.userId);
+
     }
 
-    res.json(report);
+    res.json({
+      message: "Status updated successfully",
+      report
+    });
 
   } catch (error) {
 
+    console.error(error);
+
     res.status(500).json({
-      message: "Error updating status"
+      message: "Error updating report status"
     });
 
   }
 
 };
 
-// GET REPORTS BY USER
+
+/* ===============================
+   GET USER REPORTS
+================================*/
 export const getUserReports = async (req, res) => {
 
   try {
@@ -107,6 +138,8 @@ export const getUserReports = async (req, res) => {
     res.json(reports);
 
   } catch (error) {
+
+    console.error(error);
 
     res.status(500).json({
       message: "Error fetching user reports"

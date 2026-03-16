@@ -2,100 +2,218 @@ import { useEffect, useState } from "react";
 
 const MyReports = () => {
 
-  const [reports, setReports] = useState([]);
+  const [reports,setReports] = useState([]);
+  const [coins,setCoins] = useState(0);
 
   const user = JSON.parse(localStorage.getItem("user") || "null");
 
-  useEffect(() => {
 
-    const fetchReports = async () => {
+  const rewards = [
+    { id:1, name:"Tree Plantation Certificate", coins:20 },
+    { id:2, name:"Clean Citizen Badge", coins:40 },
+    { id:3, name:"Smart Citizen Award", coins:100 }
+  ];
 
-      if (!user) return;
 
-      try {
+  useEffect(()=>{
 
-        const res = await fetch(
+    const fetchData = async ()=>{
+
+      if(!user) return;
+
+      try{
+
+        const reportsRes = await fetch(
           `https://go-clean-8c5n.onrender.com/api/user/${user._id}/reports`
         );
 
-        const data = await res.json();
+        const reportsData = await reportsRes.json();
 
-        setReports(data);
+        setReports(reportsData);
 
-      } catch (error) {
-        console.error("Error fetching reports:", error);
+
+        const coinsRes = await fetch(
+          `https://go-clean-8c5n.onrender.com/api/user/${user._id}/coins`
+        );
+
+        const coinsData = await coinsRes.json();
+
+        setCoins(coinsData.coins);
+
+      }catch(error){
+
+        console.log(error);
+
       }
 
     };
 
-    fetchReports();
+    fetchData();
 
-  }, [user]);
+  },[user]);
 
 
-  if (!user) {
-    return (
+  const redeemReward = (reward:any)=>{
+
+    if(coins < reward.coins){
+
+      alert("Not enough coins");
+
+      return;
+
+    }
+
+    setCoins(coins - reward.coins);
+
+    alert(`You redeemed: ${reward.name}`);
+
+  };
+
+
+  if(!user){
+
+    return(
       <div className="pt-24 text-center">
-        <h2 className="text-xl font-semibold">
-          Please login to see your reports
-        </h2>
+        Please login first
       </div>
-    );
+    )
+
   }
+
+
+  const completed = reports.filter(r => r.status === "Completed").length;
+
 
   return (
 
-    <div className="pt-24 px-4 md:px-10 pb-20">
+    <div className="pt-24 px-6 pb-20">
 
-      <h1 className="text-2xl font-bold mb-6">
-        My Reports
+      <h1 className="text-3xl font-bold mb-6">
+        My Dashboard
       </h1>
 
-      {reports.length === 0 && (
-        <p className="text-gray-500">
-          No reports submitted yet.
-        </p>
-      )}
 
-      <div className="space-y-4">
+      {/* USER INFO */}
+      <div className="bg-white rounded-xl shadow p-6 mb-8">
 
-        {reports.map((report) => (
+        <h2 className="text-xl font-semibold mb-4">
+          Welcome {user.name}
+        </h2>
 
-          <div
-            key={report._id}
-            className="bg-white shadow rounded-xl p-4 flex justify-between items-center"
-          >
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-            <div>
+          <div className="bg-green-100 p-4 rounded-lg">
+            <p className="text-sm">Coins Earned</p>
+            <p className="text-2xl font-bold text-green-700">
+              {coins}
+            </p>
+          </div>
 
-              <p className="font-semibold">
-                {report.issueType}
-              </p>
+          <div className="bg-blue-100 p-4 rounded-lg">
+            <p className="text-sm">Reports Submitted</p>
+            <p className="text-2xl font-bold text-blue-700">
+              {reports.length}
+            </p>
+          </div>
 
-              <p className="text-sm text-gray-500">
-                {new Date(report.createdAt).toLocaleDateString()}
-              </p>
+          <div className="bg-yellow-100 p-4 rounded-lg">
+            <p className="text-sm">Reports Completed</p>
+            <p className="text-2xl font-bold text-yellow-700">
+              {completed}
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      {/* REPORT LIST */}
+      <h2 className="text-2xl font-semibold mb-4">
+        My Reports
+      </h2>
+
+      <div className="space-y-4 mb-10">
+
+        {reports.map((report:any)=>{
+
+          return(
+
+            <div
+              key={report._id}
+              className="bg-white shadow rounded-xl p-4 flex justify-between items-center"
+            >
+
+              <div>
+
+                <p className="font-semibold">
+                  {report.issueType}
+                </p>
+
+                <p className="text-sm text-gray-500">
+                  {new Date(report.createdAt).toLocaleDateString()}
+                </p>
+
+              </div>
+
+              <span
+                className={`px-3 py-1 rounded text-white text-sm
+                ${
+                  report.status === "Completed"
+                    ? "bg-green-600"
+                    : report.status === "In Progress"
+                    ? "bg-yellow-500"
+                    : "bg-gray-500"
+                }`}
+              >
+                {report.status}
+              </span>
 
             </div>
 
-            <span
-              className={`px-3 py-1 rounded text-white text-sm
-              ${
-                report.status === "Completed"
-                  ? "bg-green-600"
-                  : report.status === "In Progress"
-                  ? "bg-yellow-500"
-                  : "bg-gray-500"
-              }`}
+          )
+
+        })}
+
+      </div>
+
+
+      {/* REWARDS SECTION */}
+      <h2 className="text-2xl font-semibold mb-4">
+        Redeem Rewards
+      </h2>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        {rewards.map((reward)=>{
+
+          return(
+
+            <div
+              key={reward.id}
+              className="bg-white shadow rounded-xl p-6 text-center"
             >
 
-              {report.status || "Pending"}
+              <h3 className="text-lg font-semibold mb-2">
+                {reward.name}
+              </h3>
 
-            </span>
+              <p className="text-gray-500 mb-4">
+                {reward.coins} coins
+              </p>
 
-          </div>
+              <button
+                onClick={()=>redeemReward(reward)}
+                className="bg-green-600 text-white px-4 py-2 rounded"
+              >
+                Redeem
+              </button>
 
-        ))}
+            </div>
+
+          )
+
+        })}
 
       </div>
 
