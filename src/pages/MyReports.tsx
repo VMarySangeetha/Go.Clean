@@ -27,7 +27,6 @@ const MyReports = () => {
         );
 
         const reportsData = await reportsRes.json();
-
         setReports(reportsData);
 
 
@@ -36,7 +35,6 @@ const MyReports = () => {
         );
 
         const coinsData = await coinsRes.json();
-
         setCoins(coinsData.coins);
 
       }catch(error){
@@ -52,9 +50,14 @@ const MyReports = () => {
   },[user]);
 
 
-  /* REDEEM REWARD (Backend API) */
+  /* REDEEM + DOWNLOAD CERTIFICATE */
 
   const redeemReward = async (reward:any)=>{
+
+    if(coins < reward.coins){
+      alert("Not enough coins");
+      return;
+    }
 
     try{
 
@@ -79,6 +82,33 @@ const MyReports = () => {
         setCoins(data.coins);
 
         alert(`Reward Redeemed: ${reward.name}`);
+
+        /* DOWNLOAD CERTIFICATE */
+
+        const cert = await fetch(
+          "https://go-clean-8c5n.onrender.com/api/certificate/generate",
+          {
+            method:"POST",
+            headers:{
+              "Content-Type":"application/json"
+            },
+            body:JSON.stringify({
+              userId:user._id,
+              reward:reward.name
+            })
+          }
+        );
+
+        const blob = await cert.blob();
+
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+
+        a.href = url;
+        a.download = "certificate.pdf";
+
+        a.click();
 
       }else{
 
@@ -234,7 +264,7 @@ const MyReports = () => {
                 onClick={()=>redeemReward(reward)}
                 className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
               >
-                Redeem
+                Redeem & Download Certificate
               </button>
 
             </div>
