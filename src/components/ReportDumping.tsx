@@ -178,7 +178,7 @@ const ReportDumping = () => {
         {/* FORM CARD */}
         <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-2xl">
 
-          <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-center text-gray-800">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-center text-green-600">
             Report Waste Issue
           </h2>
 
