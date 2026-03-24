@@ -27,7 +27,7 @@ export const createReport = async (req, res) => {
       location,
       phone,
       description,
-      image: req.file ? req.file.filename : null
+      image: req.file ? req.file.path : null
     });
 
     await newReport.save();

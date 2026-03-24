@@ -1,5 +1,7 @@
 import express from "express";
 import multer from "multer";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
+import cloudinary from "../config/cloudinary.js";
 
 import {
   createReport,
@@ -11,15 +13,13 @@ import {
 const router = express.Router();
 
 
-// STORAGE CONFIG FOR IMAGE UPLOAD
-const storage = multer.diskStorage({
-
-  destination: "uploads/",
-
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname);
+// ✅ CLOUDINARY STORAGE (REPLACES LOCAL STORAGE)
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "waste-reports",
+    allowed_formats: ["jpg", "png", "jpeg"]
   }
-
 });
 
 const upload = multer({ storage });
