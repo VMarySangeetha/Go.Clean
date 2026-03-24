@@ -59,7 +59,7 @@ const App = () => (
             {/* 404 */}
             <Route path="*" element={<NotFound />} />
 
-            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/admin-dashboard" element={<AdminDashboard />} />
             <Route path="/admin-login" element={<AdminLogin />} />
             <Route path="/scan" element={<ScanQR />} />
             <Route path="/login" element={<Login />} />
