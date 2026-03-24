@@ -9,7 +9,16 @@ export const createReport = async (req, res) => {
 
   try {
 
-    const { userId, binId, issueType, location, phone, description } = req.body;
+    // ✅ Read manually (fix for FormData)
+    const userId = req.body.userId || null;
+    const binId = req.body.binId;
+    const issueType = req.body.issueType;
+    const location = req.body.location;
+    const phone = req.body.phone;
+    const description = req.body.description;
+
+    // 🔥 DEBUG (remove later)
+    console.log("USER ID RECEIVED:", userId);
 
     const newReport = new Report({
       userId,
@@ -48,7 +57,9 @@ export const getReports = async (req, res) => {
 
   try {
 
-    const reports = await Report.find().sort({ createdAt: -1 });
+    const reports = await Report.find()
+      .populate("userId", "name email") // 🔥 MUST BE HERE
+      .sort({ createdAt: -1 });
 
     res.json(reports);
 

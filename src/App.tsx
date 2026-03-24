@@ -8,6 +8,7 @@ import ScanQR from "@/pages/ScanQR";
 import Login from "@/pages/Login";
 import Signup from "@/pages/Signup";
 import MyReports from "@/pages/MyReports";
+import AdminLogin from "@/pages/AdminLogin";
 
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -59,6 +60,7 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
 
             <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/admin-login" element={<AdminLogin />} />
             <Route path="/scan" element={<ScanQR />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />

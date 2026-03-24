@@ -8,22 +8,16 @@ const AdminDashboard = () => {
 
   const fetchReports = async () => {
     try {
-
       const res = await fetch(`${API}/reports`);
       const data = await res.json();
-
       setReports(data);
-
     } catch (error) {
       console.error(error);
     }
   };
 
-
   const updateStatus = async (id, status) => {
-
     try {
-
       await fetch(`${API}/${id}/status`, {
         method: "PATCH",
         headers: {
@@ -37,14 +31,18 @@ const AdminDashboard = () => {
     } catch (error) {
       console.error(error);
     }
-
   };
 
-
   useEffect(() => {
-    fetchReports();
-  }, []);
+    // ✅ ADDED (admin protection)
+    const isAdmin = localStorage.getItem("admin");
 
+    if (!isAdmin) {
+      window.location.href = "/admin-login";
+    } else {
+      fetchReports();
+    }
+  }, []);
 
   return (
 
@@ -77,6 +75,14 @@ const AdminDashboard = () => {
 
             </div>
 
+            {/* ✅ USER INFO */}
+            <p className="text-sm">
+              <strong>User:</strong> {report.userId?.name || "Unknown"}
+            </p>
+
+            <p className="text-sm">
+              <strong>Email:</strong> {report.userId?.email || "-"}
+            </p>
 
             <p className="text-sm">
               <strong>Bin:</strong> {report.binId || "Manual"}
@@ -92,12 +98,10 @@ const AdminDashboard = () => {
 
 
             {report.image && (
-
               <img
                 src={`https://go-clean-8c5n.onrender.com/uploads/${report.image}`}
                 className="w-full h-40 object-cover rounded"
               />
-
             )}
 
 
@@ -114,9 +118,7 @@ const AdminDashboard = () => {
             <div className="flex justify-between items-center">
 
               <span className="font-semibold text-sm">
-
                 {report.status || "Pending"}
-
               </span>
 
               <div className="flex gap-2">
@@ -163,6 +165,9 @@ const AdminDashboard = () => {
 
             <tr>
 
+              <th className="p-3">User</th>
+              <th className="p-3">Email</th>
+
               <th className="p-3">Bin</th>
               <th className="p-3">Issue</th>
               <th className="p-3">Phone</th>
@@ -185,6 +190,14 @@ const AdminDashboard = () => {
               <tr key={report._id} className="border hover:bg-gray-50">
 
                 <td className="p-3">
+                  {report.userId?.name || "Unknown"}
+                </td>
+
+                <td className="p-3">
+                  {report.userId?.email || "-"}
+                </td>
+
+                <td className="p-3">
                   {report.binId || "Manual"}
                 </td>
 
@@ -202,21 +215,16 @@ const AdminDashboard = () => {
 
 
                 <td className="p-3">
-
                   {report.image ? (
-
                     <img
                       src={`https://go-clean-8c5n.onrender.com/uploads/${report.image}`}
                       className="w-16 h-16 object-cover rounded"
                     />
-
                   ) : "-"}
-
                 </td>
 
 
                 <td className="p-3">
-
                   <a
                     href={report.location}
                     target="_blank"
@@ -224,7 +232,6 @@ const AdminDashboard = () => {
                   >
                     View Map
                   </a>
-
                 </td>
 
 
