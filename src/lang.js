@@ -10,10 +10,13 @@ const langData = {
     logout: "LOGOUT",
     welcome: "Welcome",
 
-    heroTitle: "...",
-    heroSubtitle: "...",
-    recycleBtn: "...",
-    reportBtn: "...",
+    heroTitle: "Cleanliness is not a duty imposed by law, but a responsibility owed to society.",
+
+heroSubtitle: "Every small action today creates a cleaner tomorrow.",
+
+recycleBtn: "Recycling Ideas",
+
+reportBtn: "Report",
 
     reportTitle: "Report Waste Issue",
     binId: "Dustbin ID",
