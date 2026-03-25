@@ -1,3 +1,4 @@
+import path from "path";
 import PDFDocument from "pdfkit";
 import User from "../models/user.js";
 
@@ -15,17 +16,15 @@ export const generateCertificate = async (req, res) => {
       });
     }
 
-    // ✅ LANGUAGE TEXTS
+    // 🌍 TRANSLATIONS
     const translations = {
-
       en: {
         title: "Certificate of Appreciation",
         line1: "This certificate is proudly awarded to",
         line2: "For contributing to environmental cleanliness through",
-        issued: "Issued by GO.CLEAN - Municipal Environmental Initiative",
+        issued: "GO.CLEAN - Municipal Initiative",
         date: "Date"
       },
-
       hi: {
         title: "प्रशंसा प्रमाण पत्र",
         line1: "यह प्रमाण पत्र प्रदान किया जाता है",
@@ -33,8 +32,7 @@ export const generateCertificate = async (req, res) => {
         issued: "GO.CLEAN द्वारा जारी",
         date: "तारीख"
       },
-
-      bn: {
+            bn: {
         title: "সম্মাননা সনদ",
         line1: "এই সনদ প্রদান করা হচ্ছে",
         line2: "পরিবেশ পরিষ্কার রাখতে অবদানের জন্য",
@@ -97,12 +95,17 @@ export const generateCertificate = async (req, res) => {
         issued: "GO.CLEAN ਵੱਲੋਂ ਜਾਰੀ",
         date: "ਤਾਰੀਖ"
       }
-
     };
 
     const t = translations[lang] || translations.en;
 
-    const doc = new PDFDocument();
+    const doc = new PDFDocument({
+      size: "A4",
+      layout: "landscape"
+    });
+
+    const fontPath = path.join(process.cwd(), "fonts", "NotoSans-Regular.ttf");
+    doc.font(fontPath);
 
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader(
@@ -112,35 +115,85 @@ export const generateCertificate = async (req, res) => {
 
     doc.pipe(res);
 
-    // ✅ DESIGN START
+    // 🎨 BACKGROUND BORDER
+    doc.rect(20, 20, 800, 550)
+      .lineWidth(4)
+      .stroke("#16a34a");
 
-    doc.fontSize(26).text(t.title, { align: "center" });
+    doc.rect(30, 30, 780, 530)
+      .lineWidth(1)
+      .stroke("#16a34a");
 
-    doc.moveDown();
+    // 🟢 LOGO (optional)
+    try {
+      const logoPath = path.join(process.cwd(), "uploads", "logo.png"); // add logo file
+      doc.image(logoPath, 60, 50, { width: 80 });
+    } catch (e) {
+      console.log("Logo not found, skipping...");
+    }
 
-    doc.fontSize(18).text(t.line1, { align: "center" });
-
-    doc.moveDown();
-
-    doc.fontSize(24).text(user.name, { align: "center" });
-
-    doc.moveDown();
-
-    doc.fontSize(16).text(t.line2, { align: "center" });
-
-    doc.moveDown();
-
-    doc.fontSize(18).text(reward, { align: "center" });
+    // 🏆 TITLE
+    doc
+      .fontSize(32)
+      .fillColor("#16a34a")
+      .text(t.title, 0, 120, { align: "center" });
 
     doc.moveDown(2);
 
-    doc.fontSize(14).text(t.issued, { align: "center" });
+    // 📜 LINE 1
+    doc
+      .fontSize(18)
+      .fillColor("black")
+      .text(t.line1, { align: "center" });
 
     doc.moveDown();
 
-    doc.text(`${t.date}: ${new Date().toLocaleDateString()}`, {
-      align: "center"
-    });
+    // 👤 USER NAME
+    doc
+      .fontSize(28)
+      .fillColor("#16a34a")
+      .text(user.name, { align: "center", underline: true });
+
+    doc.moveDown();
+
+    // 📜 LINE 2
+    doc
+      .fontSize(18)
+      .fillColor("black")
+      .text(t.line2, { align: "center" });
+
+    doc.moveDown();
+
+    // 🎁 REWARD
+    doc
+      .fontSize(20)
+      .fillColor("#16a34a")
+      .text(reward, { align: "center" });
+
+    doc.moveDown(3);
+
+    // ✍️ SIGNATURE SECTION
+    doc.fontSize(14).fillColor("black");
+
+    doc.text("____________________", 150, 450);
+    doc.text("Authority Signature", 150, 470);
+
+    doc.text("____________________", 550, 450);
+    doc.text("Project Head", 550, 470);
+
+    // 📅 DATE
+    doc.text(
+      `${t.date}: ${new Date().toLocaleDateString()}`,
+      0,
+      520,
+      { align: "center" }
+    );
+
+    // 🏢 FOOTER
+    doc
+      .fontSize(12)
+      .fillColor("gray")
+      .text(t.issued, 0, 550, { align: "center" });
 
     doc.end();
 
