@@ -1,6 +1,10 @@
 import heroEnvironment from '@/assets/hero-environment.png';
 import langData from "@/lang"; // ✅ ADDED
 
+
+import heroGreenCity from "@/assets/hero-green-city.jpeg";
+import heroOcean from "@/assets/hero-ocean.webp";
+import GlobalHero from './GlobalHero';
 const About = () => {
 
   // ✅ LANGUAGE SETUP
@@ -8,10 +12,11 @@ const About = () => {
   const t = langData[lang];
 
   return (
+    <GlobalHero>
     <section
       className="relative min-h-screen flex flex-col items-center justify-center text-center px-4"
       style={{
-        backgroundImage: `url(${heroEnvironment})`,
+        backgroundImage: `url(${GlobalHero})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}
@@ -89,6 +94,7 @@ const About = () => {
 
       </div>
     </section>
+    </GlobalHero>
   );
 };
 

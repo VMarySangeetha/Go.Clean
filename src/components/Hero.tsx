@@ -8,10 +8,15 @@ import heroEnvironment from "@/assets/hero-environment.png";
 import heroGreenCity from "@/assets/hero-green-city.jpeg";
 import heroOcean from "@/assets/hero-ocean.webp";
 
+import gar from "@/assets/gar.webp";
+import sar from "@/assets/sar.jpeg";
+
 const images = [
   heroEnvironment,
   heroGreenCity,
-  heroOcean
+  heroOcean,
+  gar,
+  sar
 ];
 
 const Hero = () => {
@@ -28,7 +33,7 @@ const Hero = () => {
 
     const interval = setInterval(() => {
       setCurrentImage((prev) => (prev + 1) % images.length);
-    }, 4000);
+    }, 3000);
 
     return () => clearInterval(interval);
 

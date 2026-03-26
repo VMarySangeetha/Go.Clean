@@ -1,5 +1,6 @@
 import heroEnvironment from "@/assets/hero-environment.png";
 import langData from "@/lang"; // ✅ ADDED
+import GlobalHero from "./GlobalHero";
 
 const RecyclingIdeas = () => {
 
@@ -25,15 +26,18 @@ const RecyclingIdeas = () => {
   };
 
   return (
+    <GlobalHero>
 
     <section
+    
       className="relative min-h-screen flex flex-col items-center justify-center text-center px-5 py-20"
       style={{
-        backgroundImage: `url(${heroEnvironment})`,
+        backgroundImage: `url(${GlobalHero})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
     >
+      
 
       {/* Overlay */}
       <div className="absolute inset-0 bg-black/60" />
@@ -119,8 +123,9 @@ const RecyclingIdeas = () => {
         </p>
 
       </div>
-
+    
     </section>
+    </GlobalHero>
 
   );
 

@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import langData from "@/lang"; // ✅ ADDED
+import GlobalHero from "./GlobalHero";
 
 const ReportDumping = () => {
 
@@ -147,14 +148,9 @@ const ReportDumping = () => {
   };
 
   return (
+    <GlobalHero>
 
-    <section
-      className="min-h-screen bg-cover bg-center flex items-start justify-center px-4 py-24"
-      style={{
-        backgroundImage:
-          "url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee')"
-      }}
-    >
+    <section className="min-h-screen flex items-start justify-center px-4 py-24">
 
       <div className="w-full max-w-xl">
 
@@ -281,6 +277,7 @@ const ReportDumping = () => {
       </div>
 
     </section>
+    </GlobalHero>
 
   );
 
