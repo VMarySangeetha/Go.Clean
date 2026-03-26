@@ -120,8 +120,7 @@ const redeemReward = async (reward)=>{
           },
           body:JSON.stringify({
             userId:user._id,
-            reward: t[reward.key] || reward.key,
-            lang: selectedLang ? selectedLang : "en" // 🔥 FIXED
+            reward: reward.key,  
           })
         }
       );
