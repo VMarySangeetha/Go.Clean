@@ -99,7 +99,7 @@ export const generateCertificate = async (req, res) => {
       .moveDown(0.5)
       .fontSize(18)
       .fillColor("#16a34a")
-      .text(reward, { align: "center" });
+      .text(reward ? reward.toString() : "", { align: "center" });
 
     // 🆔 CERTIFICATE ID
     doc
