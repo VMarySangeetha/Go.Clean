@@ -94,96 +94,100 @@ const AdminDashboard = () => {
       )}
 
       {/* MOBILE VIEW */}
-      <div className="md:hidden space-y-5">
+<div className="md:hidden space-y-5">
 
-        {reports.map((report) => (
+  {reports.map((report) => (
 
-          <div key={report._id} className="bg-white rounded-xl shadow p-4 space-y-3">
+    <div key={report._id} className="bg-white rounded-xl shadow-md p-4 space-y-3">
 
-            <div className="flex justify-between">
-              <span className="font-semibold">{report.issueType}</span>
-              <span className="text-sm text-gray-500">
-                {new Date(report.createdAt).toLocaleDateString()}
-              </span>
-            </div>
+      {/* HEADER */}
+      <div className="flex justify-between items-center">
+        <h3 className="font-semibold text-sm text-green-700">
+          {report.issueType}
+        </h3>
+        <span className="text-xs text-gray-500">
+          {new Date(report.createdAt).toLocaleDateString()}
+        </span>
+      </div>
 
-            <p className="text-sm">
-              <strong>{t.user}:</strong> {report.userId?.name || "Unknown"}
-            </p>
+      {/* USER DETAILS */}
+      <div className="text-sm space-y-1">
+        <p><b>Name:</b> {report.userId?.name || "Unknown"}</p>
+        <p className="break-all"><b>Email:</b> {report.userId?.email || "-"}</p>
+        <p><b>Bin:</b> {report.binId || "Manual"}</p>
+        <p><b>Phone:</b> {report.phone || "-"}</p>
+        <p><b>Issue:</b> {report.description || "-"}</p>
+      </div>
 
-            <p className="text-sm">
-              <strong>{t.email}:</strong> {report.userId?.email || "-"}
-            </p>
+      {/* IMAGE */}
+      {report.image && (
+        <img
+          src={
+            report.image.startsWith("http")
+              ? report.image
+              : `https://go-clean-8c5n.onrender.com/uploads/${report.image}`
+          }
+          className="w-full max-h-52 object-cover rounded"
+        />
+      )}
 
-            <p className="text-sm">
-              <strong>Bin:</strong> {report.binId || "Manual"}
-            </p>
+      {/* LOCATION */}
+      {report.location && (
+        <button
+          onClick={() => window.open(report.location, "_blank")}
+          className="bg-blue-500 hover:bg-blue-600 text-black px-3 py-1 rounded text-sm w-full"
+        >
+          📍view location {t.viewMap}
+        </button>
+      )}
 
-            <p className="text-sm">
-              <strong>Phone:</strong> {report.phone || "-"}
-            </p>
+      {/* STATUS */}
+      <div className="text-sm font-medium">
+        Status: 
+        <span className="ml-2 text-green-600">
+          {report.status || "Pending"}
+        </span>
+      </div>
 
-            <p className="text-sm">
-              <strong>{t.description}:</strong> {report.description || "-"}
-            </p>
+      {/* ACTION BUTTONS */}
+      <div className="flex flex-wrap gap-2">
 
-            {/* IMAGE */}
-            {report.image && (
-              <img
-                src={report.image}
-                onClick={() => setSelectedImage(report.image)}
-                className="w-full h-auto max-h-52 object-contain rounded mt-2 cursor-pointer"
-              />
-            )}
+        <button
+          onClick={() => updateStatus(report._id, "Pending")}
+          className="bg-gray-500 text-white px-3 py-1 rounded text-xs flex-1"
+        >
+          Pending
+        </button>
 
-            {/* ✅ FIXED LOCATION */}
-            {report.location ? (
-              <button
-                onClick={() => window.open(report.location, "_blank")}
-                className="bg-blue-500 text-white px-3 py-1 rounded text-sm"
-              >
-                📍 {t.viewMap}
-              </button>
-            ) : "-"}
+        <button
+          onClick={() => updateStatus(report._id, "In Progress")}
+          className="bg-yellow-500 text-black px-3 py-1 rounded text-xs flex-1"
+        >
+          Progress
+        </button>
 
-            <div className="flex justify-between items-center">
-
-              <span className="font-semibold text-sm">
-                {t.status}: {report.status || "Pending"}
-              </span>
-
-              <div className="flex gap-2">
-
-                <button onClick={() => updateStatus(report._id, "Pending")}
-                  className="bg-gray-500 text-white px-2 py-1 rounded text-xs">
-                  Pending
-                </button>
-
-                <button onClick={() => updateStatus(report._id, "In Progress")}
-                  className="bg-yellow-500 text-white px-2 py-1 rounded text-xs">
-                  Progress
-                </button>
-
-                <button onClick={() => updateStatus(report._id, "Completed")}
-                  className="bg-green-600 text-white px-2 py-1 rounded text-xs">
-                  Done
-                </button>
-                <button
-  onClick={() => handleEmailShare(report)}
-  className="bg-blue-500 text-white px-3 py-1 rounded text-xs w-full mt-2"
->
-  📧 Send to Municipal
-</button>
-
-              </div>
-
-            </div>
-
-          </div>
-
-        ))}
+        <button
+          onClick={() => updateStatus(report._id, "Completed")}
+          className="bg-green-600 text-white px-3 py-1 rounded text-xs flex-1"
+        >
+          Done
+        </button>
 
       </div>
+
+      {/* EMAIL BUTTON (FIXED POSITION) */}
+      <button
+        onClick={() => handleEmailShare(report)}
+        className="bg-blue-600 hover:bg-blue-700 text-black px-3 py-2 rounded text-sm w-full"
+      >
+        📧 Send to Municipal
+      </button>
+
+    </div>
+
+  ))}
+
+</div>
 
 
       {/* DESKTOP TABLE */}
