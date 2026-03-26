@@ -77,17 +77,42 @@ const MyReports = () => {
   },[user]);
 
 
-  const redeemReward = async (reward)=>{
+const redeemReward = async (reward)=>{
 
-    if(coins < reward.coins){
-      alert(t.notEnoughCoins);
-      return;
-    }
+  if(coins < reward.coins){
+    alert(t.notEnoughCoins);
+    return;
+  }
 
-    try{
+  try{
 
-      const res = await fetch(
-        "https://go-clean-8c5n.onrender.com/api/rewards/redeem",
+    const res = await fetch(
+      "https://go-clean-8c5n.onrender.com/api/rewards/redeem",
+      {
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+          userId:user._id,
+          cost:reward.coins
+        })
+      }
+    );
+
+    const data = await res.json();
+
+    if(res.ok){
+
+      setCoins(data.coins);
+
+      alert(`${t.redeemed}: ${t[reward.key] || reward.key}`);
+
+      // ✅ FIX: GET LANGUAGE PROPERLY
+      const selectedLang = localStorage.getItem("lang");
+
+      const cert = await fetch(
+        "https://go-clean-8c5n.onrender.com/api/certificate/generate",
         {
           method:"POST",
           headers:{
@@ -95,51 +120,39 @@ const MyReports = () => {
           },
           body:JSON.stringify({
             userId:user._id,
-            cost:reward.coins
+            reward: t[reward.key] || reward.key,
+            lang: selectedLang ? selectedLang : "en" // 🔥 FIXED
           })
         }
       );
 
-      const data = await res.json();
-
-      if(res.ok){
-
-        setCoins(data.coins);
-
-        alert(`${t.redeemed}: ${t[reward.key] || reward.key}`);
-
-        const cert = await fetch(
-          "https://go-clean-8c5n.onrender.com/api/certificate/generate",
-          {
-            method:"POST",
-            headers:{
-              "Content-Type":"application/json"
-            },
-            body:JSON.stringify({
-              userId:user._id,
-              reward: t[reward.key] || reward.key,
-lang: localStorage.getItem("lang") || "en"
-            })
-          }
-        );
-
-        const blob = await cert.blob();
-        const url = window.URL.createObjectURL(blob);
-
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "certificate.pdf";
-        a.click();
-
-      }else{
-        alert(data.message);
+      // ✅ SAFETY CHECK (NEW)
+      if(!cert.ok){
+        alert("Certificate generation failed");
+        return;
       }
 
-    }catch(error){
-      console.log(error);
+      const blob = await cert.blob();
+      const url = window.URL.createObjectURL(blob);
+
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "certificate.pdf";
+      a.click();
+
+      // ✅ CLEAN MEMORY (NEW)
+      window.URL.revokeObjectURL(url);
+
+    }else{
+      alert(data.message);
     }
 
-  };
+  }catch(error){
+    console.log(error);
+    alert("Something went wrong");
+  }
+
+};
 
 
   if(!user){

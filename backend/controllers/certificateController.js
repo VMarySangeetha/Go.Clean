@@ -8,11 +8,14 @@ export const generateCertificate = async (req, res) => {
     const { userId, reward, lang = "en" } = req.body;
 
     const user = await User.findById(userId);
+
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({
+        message: "User not found"
+      });
     }
 
-    // 🌍 TRANSLATIONS
+    // 🌍 TRANSLATIONS (UNCHANGED + SAFE)
     const translations = {
       en: {
         title: "Certificate of Appreciation",
@@ -99,75 +102,85 @@ export const generateCertificate = async (req, res) => {
 
     doc.pipe(res);
 
-    // ✅ FONT SAFE LOAD (VERY IMPORTANT FIX)
+    // ✅ FONT SAFE
     const fontPath = path.join(process.cwd(), "backend", "fonts", "NotoSans-Regular.ttf");
     if (fs.existsSync(fontPath)) {
       doc.font(fontPath);
-    } else {
-      console.log("⚠ Font not found, using default");
     }
 
-    // 🎨 PREMIUM BORDER
-    doc.rect(20, 20, 800, 550).lineWidth(3).stroke("#16a34a");
+    // 🎨 PREMIUM DOUBLE BORDER
+    doc.rect(20, 20, 800, 550).lineWidth(4).stroke("#16a34a");
     doc.rect(30, 30, 780, 530).lineWidth(1).stroke("#16a34a");
 
-    // 🟢 LOGO SAFE LOAD
+    // 🟢 WATERMARK (NEW PREMIUM)
+    doc
+      .fontSize(80)
+      .fillColor("#16a34a")
+      .opacity(0.08)
+      .text("GO CLEAN", 150, 250, { rotate: 30 });
+
+    doc.opacity(1);
+
+    // 🟢 LOGO
     try {
       const logoPath = path.join(process.cwd(), "backend", "uploads", "logo.png");
-
       if (fs.existsSync(logoPath)) {
-        doc.image(logoPath, 370, 50, { width: 80 });
+        doc.image(logoPath, 370, 40, { width: 80 });
       }
-    } catch (err) {
-      console.log("Logo error:", err.message);
-    }
+    } catch {}
 
     // 🏆 TITLE
     doc
       .fontSize(32)
       .fillColor("#16a34a")
-      .text(t.title, 0, 150, { align: "center" });
+      .text(t.title, 0, 140, { align: "center" });
 
     // 📜 LINE 1
     doc
-      .moveDown(1)
+      .moveDown()
       .fontSize(16)
       .fillColor("black")
       .text(t.line1, { align: "center" });
 
     // 👤 NAME
     doc
-      .moveDown(1)
+      .moveDown()
       .fontSize(28)
       .fillColor("#16a34a")
       .text(user.name, { align: "center", underline: true });
 
     // 📜 LINE 2
     doc
-      .moveDown(1)
+      .moveDown()
       .fontSize(16)
       .fillColor("black")
       .text(t.line2, { align: "center" });
 
     // 🎁 REWARD
     doc
-      .moveDown(1)
+      .moveDown()
       .fontSize(18)
       .fillColor("#16a34a")
       .text(reward, { align: "center" });
 
-    // ✍️ SIGNATURE LINES
-    doc.moveTo(200, 430).lineTo(350, 430).stroke();
-    doc.moveTo(500, 430).lineTo(650, 430).stroke();
+    // 🆔 CERTIFICATE ID (NEW FEATURE)
+    const certId = "GC-" + Date.now();
+    doc
+      .fontSize(10)
+      .fillColor("gray")
+      .text(`Certificate ID: ${certId}`, 40, 500);
 
-    // ✍️ SIGNATURE TEXT
-    doc.fontSize(12);
-    doc.text("GO.CLEAN", 240, 435);
-    doc.text("GO.CLEAN", 540, 435);
+    // ✍️ SIGNATURE
+    doc.moveTo(200, 420).lineTo(350, 420).stroke();
+    doc.moveTo(500, 420).lineTo(650, 420).stroke();
+
+    doc.fontSize(12).fillColor("black");
+    doc.text("GO.CLEAN", 240, 425);
+    doc.text("GO.CLEAN", 540, 425);
 
     doc.fontSize(10);
-    doc.text("Authority Signature", 200, 450);
-    doc.text("Project Head", 520, 450);
+    doc.text("Authority Signature", 200, 440);
+    doc.text("Project Head", 520, 440);
 
     // 📅 DATE
     doc
