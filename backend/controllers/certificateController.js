@@ -8,13 +8,11 @@ export const generateCertificate = async (req, res) => {
     const { userId, reward, lang = "en" } = req.body;
 
     const user = await User.findById(userId);
-
     if (!user) {
-      return res.status(404).json({
-        message: "User not found"
-      });
+      return res.status(404).json({ message: "User not found" });
     }
 
+    // 🌍 TRANSLATIONS
     const translations = {
       en: {
         title: "Certificate of Appreciation",
@@ -101,93 +99,78 @@ export const generateCertificate = async (req, res) => {
 
     doc.pipe(res);
 
-    // ✅ FONT FIX
+    // ✅ FONT SAFE LOAD (VERY IMPORTANT FIX)
     const fontPath = path.join(process.cwd(), "backend", "fonts", "NotoSans-Regular.ttf");
-
     if (fs.existsSync(fontPath)) {
-      doc.registerFont("custom", fontPath);
+      doc.font(fontPath);
+    } else {
+      console.log("⚠ Font not found, using default");
     }
 
-    // 🎨 BORDER
-    doc.rect(20, 20, 800, 550).lineWidth(4).stroke("#16a34a");
+    // 🎨 PREMIUM BORDER
+    doc.rect(20, 20, 800, 550).lineWidth(3).stroke("#16a34a");
     doc.rect(30, 30, 780, 530).lineWidth(1).stroke("#16a34a");
 
-    // 🟢 WATERMARK
-    doc
-      .font("custom")
-      .fontSize(80)
-      .fillColor("#16a34a")
-      .opacity(0.08)
-      .text("GO CLEAN", 150, 250, { rotate: 30 });
-
-    doc.opacity(1);
-
-    // 🟢 LOGO
+    // 🟢 LOGO SAFE LOAD
     try {
       const logoPath = path.join(process.cwd(), "backend", "uploads", "logo.png");
+
       if (fs.existsSync(logoPath)) {
-        doc.image(logoPath, 370, 40, { width: 80 });
+        doc.image(logoPath, 370, 50, { width: 80 });
       }
-    } catch {}
+    } catch (err) {
+      console.log("Logo error:", err.message);
+    }
 
     // 🏆 TITLE
     doc
-      .font("custom")
       .fontSize(32)
       .fillColor("#16a34a")
-      .text(t.title, 0, 140, { align: "center" });
+      .text(t.title, 0, 150, { align: "center" });
 
     // 📜 LINE 1
     doc
-      .font("custom")
-      .moveDown()
+      .moveDown(1)
       .fontSize(16)
       .fillColor("black")
       .text(t.line1, { align: "center" });
 
     // 👤 NAME
     doc
-      .font("custom")
-      .moveDown()
+      .moveDown(1)
       .fontSize(28)
       .fillColor("#16a34a")
       .text(user.name, { align: "center", underline: true });
 
     // 📜 LINE 2
     doc
-      .font("custom")
-      .moveDown()
+      .moveDown(1)
       .fontSize(16)
       .fillColor("black")
       .text(t.line2, { align: "center" });
 
     // 🎁 REWARD
     doc
-      .font("custom")
-      .moveDown()
+      .moveDown(1)
       .fontSize(18)
       .fillColor("#16a34a")
       .text(reward, { align: "center" });
 
-    // 🆔 CERTIFICATE ID
-    const certId = "GC-" + Date.now();
-    doc.font("custom").fontSize(10).fillColor("gray").text(`Certificate ID: ${certId}`, 40, 500);
+    // ✍️ SIGNATURE LINES
+    doc.moveTo(200, 430).lineTo(350, 430).stroke();
+    doc.moveTo(500, 430).lineTo(650, 430).stroke();
 
-    // ✍️ SIGNATURE
-    doc.moveTo(200, 420).lineTo(350, 420).stroke();
-    doc.moveTo(500, 420).lineTo(650, 420).stroke();
-
-    doc.font("custom").fontSize(12).fillColor("black");
-    doc.text("GO.CLEAN", 240, 425);
-    doc.text("GO.CLEAN", 540, 425);
+    // ✍️ SIGNATURE TEXT
+    doc.fontSize(12);
+    doc.text("GO.CLEAN", 240, 435);
+    doc.text("GO.CLEAN", 540, 435);
 
     doc.fontSize(10);
-    doc.text("Authority Signature", 200, 440);
-    doc.text("Project Head", 520, 440);
+    doc.text("Authority Signature", 200, 450);
+    doc.text("Project Head", 520, 450);
 
     // 📅 DATE
     doc
-      .font("custom")
       .fontSize(12)
       .text(`${t.date}: ${new Date().toLocaleDateString()}`, 0, 500, {
         align: "center"
@@ -195,7 +178,6 @@ export const generateCertificate = async (req, res) => {
 
     // 🏢 FOOTER
     doc
-      .font("custom")
       .fontSize(10)
       .fillColor("gray")
       .text(t.issued, 0, 520, { align: "center" });
