@@ -82,8 +82,8 @@ feature2: "Image upload proof",
 feature3: "Live status tracking",
 
 aboutQuote: "Together, small actions create a big environmental impact.",
-home: "Home",
-report: "Report",
+home: "HOME",
+report: "REPORT",
 
 treeCert: "Tree Plantation Certificate",
 cleanBadge: "Clean Citizen Badge",
