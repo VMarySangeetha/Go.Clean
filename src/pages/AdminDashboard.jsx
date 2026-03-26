@@ -1,6 +1,38 @@
 import { useEffect, useState } from "react";
 import langData from "@/lang";
 
+const handleEmailShare = (report) => {
+
+  const subject = "Waste Issue Report - GO.CLEAN";
+
+  const imageUrl = report.image
+    ? `https://go-clean-8c5n.onrender.com/uploads/${report.image}`
+    : "No Image";
+
+  const body = `
+🚨 Waste Issue Report
+
+👤 User: ${report.userId?.name || "Unknown"}
+📧 Email: ${report.userId?.email || "-"}
+📍 Location: ${report.location}
+🗑 Issue: ${report.issueType}
+📞 Phone: ${report.phone || "-"}
+📝 Description: ${report.description || "-"}
+
+📷 Image: ${imageUrl}
+
+📅 Date: ${new Date(report.createdAt).toLocaleDateString()}
+
+Please take necessary action.
+
+- GO.CLEAN Admin Dashboard
+  `;
+
+  window.location.href =
+    `mailto:municipal@city.gov` +
+    `?subject=${encodeURIComponent(subject)}` +
+    `&body=${encodeURIComponent(body)}`;
+};
 const AdminDashboard = () => {
 
   const [reports, setReports] = useState([]);
@@ -136,6 +168,12 @@ const AdminDashboard = () => {
                   className="bg-green-600 text-white px-2 py-1 rounded text-xs">
                   Done
                 </button>
+                <button
+  onClick={() => handleEmailShare(report)}
+  className="bg-blue-500 text-white px-3 py-1 rounded text-xs w-full mt-2"
+>
+  📧 Send to Municipal
+</button>
 
               </div>
 
@@ -220,6 +258,12 @@ const AdminDashboard = () => {
                   <button onClick={() => updateStatus(report._id, "Pending")} className="bg-gray-500 text-black px-2 py-1 rounded text-xs">Pending</button>
                   <button onClick={() => updateStatus(report._id, "In Progress")} className="bg-yellow-500 text-black px-2 py-1 rounded text-xs">Progress</button>
                   <button onClick={() => updateStatus(report._id, "Completed")} className="bg-green-600 text-black px-2 py-1 rounded text-xs">Done</button>
+                  <button
+  onClick={() => handleEmailShare(report)}
+  className="bg-blue-500 hover:bg-blue-600 text-black px-2 py-1 rounded text-xs"
+>
+  📧 Email
+</button>
                 </td>
 
                 <td className="p-3">
