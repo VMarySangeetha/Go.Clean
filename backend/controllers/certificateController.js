@@ -27,9 +27,8 @@ export const generateCertificate = async (req, res) => {
     // 🔥 UNIQUE CERTIFICATE ID
     const certId = "GC-" + Date.now();
 
-    // 🔥 QR DATA (can be verification URL later)
+    // 🔥 QR DATA
     const qrData = `Certificate ID: ${certId} | Name: ${user.name}`;
-
     const qrImage = await QRCode.toDataURL(qrData);
 
     const doc = new PDFDocument({
@@ -49,7 +48,7 @@ export const generateCertificate = async (req, res) => {
       doc.font(fontPath);
     }
 
-    // 🎨 BORDER (Govt style)
+    // 🎨 BORDER
     doc.rect(20, 20, 800, 550).lineWidth(4).stroke("#065f46");
     doc.rect(30, 30, 780, 530).lineWidth(1).stroke("#065f46");
 
@@ -94,12 +93,21 @@ export const generateCertificate = async (req, res) => {
       .fillColor("black")
       .text(t.line2, { align: "center" });
 
-    // 🎁 REWARD
+    // 🎁 REWARD (✅ FIXED ONLY THIS PART)
+    const rewardMap = {
+      treeCert: "Tree Plantation Certificate",
+      cleanBadge: "Clean Citizen Badge",
+      smartAward: "Smart Waste Award"
+    };
+
+    const safeReward =
+      rewardMap[reward] || "Environmental Cleanliness Contribution";
+
     doc
       .moveDown(0.5)
       .fontSize(18)
       .fillColor("#16a34a")
-      .text(reward ? reward.toString() : "", { align: "center" });
+      .text(safeReward, { align: "center" });
 
     // 🆔 CERTIFICATE ID
     doc
