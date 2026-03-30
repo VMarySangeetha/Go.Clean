@@ -17,7 +17,7 @@ const CommunityFeed = () => {
       .then(data => {
         console.log("Stories:", data);
 
-        // ✅ FIX: handle API properly
+        // ✅ HANDLE API RESPONSE
         if (Array.isArray(data)) {
           setStories(data);
         } else if (data.stories) {
@@ -39,23 +39,27 @@ const CommunityFeed = () => {
 
   return (
 
-    <div className="h-screen overflow-y-scroll snap-y snap-mandatory bg-black text-white relative">
+    <div className="pt-16 h-screen overflow-y-auto snap-y snap-mandatory bg-black text-white relative">
 
-      {/* ✅ FIXED BUTTON POSITION */}
+      {/* ✅ ADD STORY BUTTON */}
       {user && (
         <button
           onClick={() => navigate("/add-story")}
-          className="fixed bottom-24 right-6 z-50 bg-green-600 hover:bg-green-700 p-4 rounded-full shadow-xl"
+          className="fixed bottom-24 right-6 z-50 bg-green-600 hover:bg-green-700 p-4 rounded-full shadow-xl transition"
         >
           <Plus size={26} />
         </button>
       )}
 
-      {/* EMPTY STATE */}
+      {/* ✅ EMPTY STATE */}
       {stories.length === 0 && (
-        <div className="flex flex-col items-center justify-center h-screen text-xl gap-3">
+        <div className="flex flex-col items-center justify-center h-[calc(100vh-64px)] text-xl gap-3">
           <p>No stories found 🚫</p>
-          {user && <p className="text-sm opacity-70">Click + to add story</p>}
+          {user && (
+            <p className="text-sm opacity-70">
+              Click + to add your first story
+            </p>
+          )}
         </div>
       )}
 
@@ -63,10 +67,10 @@ const CommunityFeed = () => {
 
         <div
           key={story._id}
-          className="h-screen w-full snap-start relative flex items-center justify-center"
+          className="min-h-[calc(100vh-64px)] w-full snap-start relative"
         >
 
-          {/* IMAGE */}
+          {/* ✅ IMAGE */}
           <img
             src={
               story.image
@@ -75,23 +79,26 @@ const CommunityFeed = () => {
                   : `https://go-clean-8c5n.onrender.com/uploads/${story.image}`
                 : "https://via.placeholder.com/600x800"
             }
-            className="absolute inset-0 w-full h-full object-cover"
+            className="absolute inset-0 w-full h-full object-cover z-0"
           />
 
-          {/* OVERLAY */}
-          <div className="absolute inset-0 bg-black/40" />
+          {/* ✅ OVERLAY (FIXED Z-INDEX) */}
+          <div className="absolute inset-0 bg-black/50 z-10" />
 
-          {/* CONTENT */}
-          <div className="absolute bottom-10 left-4 right-4 z-10">
+          {/* ✅ CONTENT */}
+          <div className="absolute bottom-10 left-4 right-4 z-20">
 
+            {/* USER */}
             <h2 className="font-bold text-lg">
               {story.userId?.name || "User"}
             </h2>
 
+            {/* TEXT */}
             <p className="text-sm mt-1">
               {story.text || ""}
             </p>
 
+            {/* ACTIONS */}
             <div className="flex gap-6 mt-3 items-center">
 
               <button onClick={() => toggleLike(story._id)}>
