@@ -8,7 +8,6 @@ const CommunityFeed = () => {
   const [liked, setLiked] = useState([]);
 
   const navigate = useNavigate();
-
   const user = JSON.parse(localStorage.getItem("user") || "null");
 
   useEffect(() => {
@@ -17,7 +16,6 @@ const CommunityFeed = () => {
       .then(data => {
         console.log("Stories:", data);
 
-        // ✅ HANDLE API RESPONSE
         if (Array.isArray(data)) {
           setStories(data);
         } else if (data.stories) {
@@ -39,38 +37,34 @@ const CommunityFeed = () => {
 
   return (
 
-    <div className="pt-16 h-screen overflow-y-auto snap-y snap-mandatory bg-black text-white relative">
+    <div className="mt-16 bg-black text-white">
 
-      {/* ✅ ADD STORY BUTTON */}
+      {/* ✅ FIX BUTTON (NO MORE NAVBAR OVERLAP) */}
       {user && (
         <button
           onClick={() => navigate("/add-story")}
-          className="fixed bottom-24 right-6 z-50 bg-green-600 hover:bg-green-700 p-4 rounded-full shadow-xl transition"
+          className="fixed bottom-6 right-6 z-[9999] bg-green-600 hover:bg-green-700 p-4 rounded-full shadow-xl"
         >
           <Plus size={26} />
         </button>
       )}
 
-      {/* ✅ EMPTY STATE */}
+      {/* ✅ EMPTY */}
       {stories.length === 0 && (
-        <div className="flex flex-col items-center justify-center h-[calc(100vh-64px)] text-xl gap-3">
-          <p>No stories found 🚫</p>
-          {user && (
-            <p className="text-sm opacity-70">
-              Click + to add your first story
-            </p>
-          )}
+        <div className="flex items-center justify-center h-[80vh] text-xl">
+          No stories found 🚫
         </div>
       )}
 
+      {/* ✅ STORIES */}
       {stories.map((story) => (
 
         <div
           key={story._id}
-          className="min-h-[calc(100vh-64px)] w-full snap-start relative"
+          className="h-[90vh] w-full relative flex items-center justify-center border-b border-gray-800"
         >
 
-          {/* ✅ IMAGE */}
+          {/* IMAGE */}
           <img
             src={
               story.image
@@ -79,27 +73,24 @@ const CommunityFeed = () => {
                   : `https://go-clean-8c5n.onrender.com/uploads/${story.image}`
                 : "https://via.placeholder.com/600x800"
             }
-            className="absolute inset-0 w-full h-full object-cover z-0"
+            className="absolute inset-0 w-full h-full object-cover"
           />
 
-          {/* ✅ OVERLAY (FIXED Z-INDEX) */}
-          <div className="absolute inset-0 bg-black/50 z-10" />
+          {/* OVERLAY */}
+          <div className="absolute inset-0 bg-black/50" />
 
-          {/* ✅ CONTENT */}
-          <div className="absolute bottom-10 left-4 right-4 z-20">
+          {/* CONTENT */}
+          <div className="absolute bottom-10 left-4 right-4 z-10">
 
-            {/* USER */}
             <h2 className="font-bold text-lg">
               {story.userId?.name || "User"}
             </h2>
 
-            {/* TEXT */}
             <p className="text-sm mt-1">
               {story.text || ""}
             </p>
 
-            {/* ACTIONS */}
-            <div className="flex gap-6 mt-3 items-center">
+            <div className="flex gap-5 mt-3">
 
               <button onClick={() => toggleLike(story._id)}>
                 <Heart
