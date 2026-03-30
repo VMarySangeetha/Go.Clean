@@ -1,42 +1,59 @@
 import { useEffect, useState } from "react";
-import { Heart, MessageCircle } from "lucide-react";
+import { Heart, MessageCircle, Plus } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const CommunityFeed = () => {
 
   const [stories, setStories] = useState([]);
-  const [liked, setLiked] = useState({});
+  const [liked, setLiked] = useState([]);
+
+  const navigate = useNavigate();
+
+  const user = JSON.parse(localStorage.getItem("user") || "null");
 
   useEffect(() => {
     fetch("https://go-clean-8c5n.onrender.com/api/story")
       .then(res => res.json())
-      .then(data => setStories(data))
+      .then(data => {
+        console.log("Stories:", data);
+        setStories(data);
+      })
       .catch(err => console.log(err));
   }, []);
 
   const toggleLike = (id) => {
-    setLiked(prev => ({
-      ...prev,
-      [id]: !prev[id]
-    }));
+    setLiked(prev =>
+      prev.includes(id)
+        ? prev.filter(x => x !== id)
+        : [...prev, id]
+    );
   };
 
   return (
 
-    <div className="h-screen overflow-y-scroll snap-y snap-mandatory scroll-smooth">
+    <div className="min-h-screen bg-black text-white relative">
+
+      {/* 🔥 ADD STORY BUTTON */}
+      {user && (
+        <button
+          onClick={() => navigate("/add-story")}
+          className="fixed top-24 right-5 z-50 bg-green-600 p-3 rounded-full shadow-lg"
+        >
+          <Plus size={24} />
+        </button>
+      )}
 
       {/* EMPTY STATE */}
       {stories.length === 0 && (
-        <div className="h-screen flex items-center justify-center text-white bg-black">
-          No stories available
+        <div className="flex items-center justify-center h-screen text-xl">
+          No stories found 🚫 <br />
+          {user && "Click + to add one"}
         </div>
       )}
 
       {stories.map((story) => (
 
-        <div
-          key={story._id}
-          className="h-screen w-full snap-start relative flex items-center justify-center"
-        >
+        <div key={story._id} className="h-screen relative">
 
           {/* IMAGE */}
           <img
@@ -47,58 +64,39 @@ const CommunityFeed = () => {
                   : `https://go-clean-8c5n.onrender.com/uploads/${story.image}`
                 : "https://via.placeholder.com/600x800"
             }
-            className="absolute inset-0 w-full h-full object-cover"
+            className="w-full h-full object-cover absolute"
           />
 
-          {/* DARK OVERLAY */}
+          {/* OVERLAY */}
           <div className="absolute inset-0 bg-black/40" />
 
-          {/* GRADIENT OVERLAY (BOTTOM) */}
-          <div className="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-black/80 to-transparent" />
-
           {/* CONTENT */}
-          <div className="relative z-10 w-full max-w-2xl px-4 text-white flex flex-col justify-end h-full pb-20">
+          <div className="absolute bottom-10 left-4 right-4">
 
-            {/* USER */}
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center font-bold">
-                {story.userId?.name?.charAt(0) || "U"}
-              </div>
-              <span className="font-semibold text-lg">
-                {story.userId?.name || "Unknown"}
-              </span>
-            </div>
+            <h2 className="font-bold text-lg">
+              {story.userId?.name || "User"}
+            </h2>
 
-            {/* TEXT */}
-            <p className="text-base mb-4 leading-relaxed">
+            <p className="text-sm mt-1">
               {story.text || ""}
             </p>
 
             {/* ACTIONS */}
-            <div className="flex items-center gap-6 mb-3">
+            <div className="flex gap-5 mt-3">
 
-              {/* LIKE */}
               <button onClick={() => toggleLike(story._id)}>
                 <Heart
-                  size={30}
-                  className={`transition transform ${
-                    liked[story._id]
-                      ? "text-red-500 scale-125"
+                  className={
+                    liked.includes(story._id)
+                      ? "text-red-500"
                       : "text-white"
-                  }`}
+                  }
                 />
               </button>
 
-              {/* COMMENT */}
-              <MessageCircle size={30} />
+              <MessageCircle />
 
             </div>
-
-            {/* COMMENT INPUT */}
-            <input
-              placeholder="Add a comment..."
-              className="w-full p-2 rounded bg-white/90 text-black text-sm outline-none"
-            />
 
           </div>
 

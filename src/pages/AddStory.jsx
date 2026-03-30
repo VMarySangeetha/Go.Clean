@@ -1,4 +1,9 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 const AddStory = () => {
+
+  const navigate = useNavigate();
 
   const user = JSON.parse(localStorage.getItem("user"));
 
@@ -18,22 +23,33 @@ const AddStory = () => {
     });
 
     alert("Story added!");
+    navigate("/feed");
   };
 
   if (!user) return <p>Please login</p>;
 
   return (
-    <div className="p-5">
+    <div className="min-h-screen flex flex-col items-center justify-center gap-4">
+
+      <h1 className="text-2xl font-bold">Add Story</h1>
 
       <textarea
-        placeholder="Share your story..."
+        placeholder="Write your story..."
+        className="border p-2 w-80"
         onChange={(e) => setText(e.target.value)}
       />
 
       <input type="file" onChange={(e) => setImage(e.target.files[0])} />
 
-      <button onClick={submit}>Post Story</button>
+      <button
+        onClick={submit}
+        className="bg-green-600 text-white px-4 py-2 rounded"
+      >
+        Post Story
+      </button>
 
     </div>
   );
 };
+
+export default AddStory;

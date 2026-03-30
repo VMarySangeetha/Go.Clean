@@ -25,6 +25,7 @@ import Hero from "./components/Hero";
 import RecyclingIdeas from "./components/RecyclingIdeas";
 import About from "./components/About";
 import CommunityFeed from "@/pages/CommunityFeed";
+import AddStory from "@/pages/AddStory";
 
 
 
@@ -69,6 +70,7 @@ const App = () => (
             <Route path="/signup" element={<Signup />} />
             <Route path="/my-reports" element={<MyReports />} />
             <Route path="/feed" element={<CommunityFeed />} />
+            <Route path="/add-story" element={<AddStory />} />
           </Routes>
 
           {/* FOOTER */}
