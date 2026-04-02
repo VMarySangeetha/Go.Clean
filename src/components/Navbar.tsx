@@ -88,7 +88,7 @@ const Navbar = () => {
     isActive ? "text-green-400" : "hover:text-green-400"
   }
 >
-  FEED
+  {t.feed}
 </NavLink>
 
   {user && (
