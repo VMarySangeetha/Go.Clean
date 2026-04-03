@@ -120,7 +120,7 @@ const CommunityFeed = () => {
       {user && (
         <motion.button
           onClick={() => navigate("/add-story")}
-          className="fixed top-4 right-4 z-[999] bg-gradient-to-r from-pink-500 to-purple-600 text-white p-3 rounded-full shadow-xl"
+          className="fixed top-14 right-5 z-[999] bg-gradient-to-r from-pink-500 to-purple-600 text-white p-5 rounded-full shadow-xl"
         >
           <Plus size={22} />
         </motion.button>
