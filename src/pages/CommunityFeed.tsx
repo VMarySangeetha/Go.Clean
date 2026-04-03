@@ -21,12 +21,11 @@ const CommunityFeed = () => {
   const [loading, setLoading] = useState(true);
   const [doubleTapId, setDoubleTapId] = useState<string | null>(null);
   const [imageErrors, setImageErrors] = useState<Set<string>>(new Set());
-  const [user, setUser] = useState<any>(null); // ✅ FIXED
+  const [user, setUser] = useState<any>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const navigate = useNavigate();
 
-  // ✅ FIX: Proper user loading (mobile safe)
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
@@ -75,7 +74,6 @@ const CommunityFeed = () => {
     setImageErrors((prev) => new Set([...prev, storyId]));
   };
 
-  // ✅ FIX: Cloudinary image handling
   const getImageUrl = (story: Story) => {
     return story.image || null;
   };
@@ -117,35 +115,15 @@ const CommunityFeed = () => {
       ref={containerRef}
       className="h-screen w-full overflow-y-scroll snap-y snap-mandatory bg-black scrollbar-hide overscroll-none touch-pan-y"
     >
-      {/* ✅ FIXED MOBILE BUTTON */}
+
+      {/* ✅ TOP RIGHT BUTTON (FIXED) */}
       {user && (
         <motion.button
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          whileTap={{ scale: 0.9 }}
           onClick={() => navigate("/add-story")}
-          className="fixed bottom-20 md:bottom-8 right-4 md:right-8 z-[999] bg-gradient-to-r from-pink-500 to-purple-600 text-white p-4 rounded-full shadow-2xl"
+          className="fixed top-4 right-4 z-[999] bg-gradient-to-r from-pink-500 to-purple-600 text-white p-3 rounded-full shadow-xl"
         >
-          <Plus size={26} />
+          <Plus size={22} />
         </motion.button>
-      )}
-
-      {stories.length === 0 && (
-        <div className="h-screen snap-start flex flex-col items-center justify-center gap-4 px-4">
-          <div className="w-20 h-20 rounded-full bg-gray-900 flex items-center justify-center">
-            <MessageCircle size={32} className="text-gray-600" />
-          </div>
-          <p className="text-xl font-bold text-white">No stories yet</p>
-          <p className="text-gray-400 text-sm">Be the first to share!</p>
-          {user && (
-            <button
-              onClick={() => navigate("/add-story")}
-              className="mt-2 px-6 py-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-full text-sm font-semibold"
-            >
-              Create Story
-            </button>
-          )}
-        </div>
       )}
 
       {stories.map((story, index) => {
@@ -155,67 +133,52 @@ const CommunityFeed = () => {
         const hasImageError = imageErrors.has(story._id);
 
         return (
-          <div
-            key={story._id}
-            className="h-screen snap-start snap-always relative flex items-center justify-center bg-black"
-          >
-            <div className="relative w-full h-full overflow-hidden flex items-center justify-center bg-black">
+          <div key={story._id} className="h-screen snap-start relative bg-black">
+
+            {/* IMAGE */}
+            <div className="w-full h-full flex items-center justify-center bg-black">
               {imageUrl && !hasImageError ? (
                 <img
                   src={imageUrl}
                   alt="story"
-                  className="w-full h-full object-cover"
+                  className="max-w-full max-h-full object-contain"
                   onDoubleClick={() => handleDoubleTap(story._id)}
                   onError={() => handleImageError(story._id)}
-                  loading={index > 1 ? "lazy" : "eager"}
                 />
               ) : (
-                <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 to-black">
-                  <ImageOff size={48} className="text-gray-600 mb-3" />
-                  <p className="text-gray-500 text-sm">Image unavailable</p>
-                </div>
+                <ImageOff size={40} className="text-gray-500" />
               )}
+            </div>
 
-              <AnimatePresence>
-                {doubleTapId === story._id && (
-                  <motion.div
-                    initial={{ scale: 0, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    exit={{ scale: 1.5, opacity: 0 }}
-                    className="absolute inset-0 flex items-center justify-center z-20"
-                  >
-                    <Heart size={100} className="text-pink-500 fill-pink-500" />
-                  </motion.div>
-                )}
-              </AnimatePresence>
+            {/* DARK OVERLAY FOR VISIBILITY */}
+            <div className="absolute inset-0 bg-black/40" />
 
-              {/* RIGHT ACTIONS */}
-              <div className="absolute right-4 bottom-28 flex flex-col items-center gap-6 z-10">
-                <button onClick={() => toggleLike(story._id)}>
-                  <Heart className={isLiked ? "text-pink-500 fill-pink-500" : "text-white"} />
-                </button>
+            {/* ACTION BUTTONS */}
+            <div className="absolute right-3 bottom-28 flex flex-col items-center gap-5 z-20">
+              <button onClick={() => toggleLike(story._id)}>
+                <Heart className={`w-7 h-7 ${isLiked ? "text-pink-500 fill-pink-500" : "text-white"}`} />
+              </button>
 
-                <MessageCircle className="text-white" />
-                <Share2 className="text-white" />
+              <MessageCircle className="w-7 h-7 text-white" />
+              <Share2 className="w-7 h-7 text-white" />
 
-                <button onClick={() => toggleSave(story._id)}>
-                  <Bookmark className={isSaved ? "fill-white" : "text-white"} />
-                </button>
-              </div>
+              <button onClick={() => toggleSave(story._id)}>
+                <Bookmark className={`w-7 h-7 ${isSaved ? "fill-white" : "text-white"}`} />
+              </button>
+            </div>
 
-              {/* USER INFO */}
-              <div className="absolute bottom-6 left-4 right-20 z-10">
-                <p className="text-white font-semibold">
-                  {story.userId?.name || "Anonymous"}
-                </p>
-                <p className="text-gray-400 text-xs">
-                  {getTimeAgo(story.createdAt)}
-                </p>
+            {/* USER INFO (ALWAYS VISIBLE) */}
+            <div className="absolute bottom-6 left-4 right-16 z-20 text-white">
+              <p className="font-semibold">
+                {story.userId?.name || "Anonymous"}
+              </p>
+              <p className="text-xs text-gray-300">
+                {getTimeAgo(story.createdAt)}
+              </p>
 
-                {story.text && (
-                  <p className="text-white text-sm mt-2">{story.text}</p>
-                )}
-              </div>
+              {story.text && (
+                <p className="text-sm mt-2">{story.text}</p>
+              )}
             </div>
           </div>
         );
