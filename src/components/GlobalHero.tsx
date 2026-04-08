@@ -1,17 +1,34 @@
 import { useEffect, useState } from "react";
 
-import heroEnvironment from "@/assets/hero-environment.png";
-import heroGreenCity from "@/assets/hero-green-city.jpeg";
-import heroOcean from "@/assets/hero-ocean.webp";
-import gar from "@/assets/gar.webp";
-import sar from "@/assets/sar.jpeg";
+import heroEnvironment from "@/assets/hero-environmentt.jpg";
+//import heroGreenCity from "@/assets/hero-green-city.jpeg";
+//import heroOcean from "@/assets/hero-ocean.webp";
+
+//import gar from "@/assets/gar.webp";
+//import sar from "@/assets/sar.jpeg";
+import few from "@/assets/new.jpg";
+import hhh from "@/assets/hhh.jpg";
+import abc from "@/assets/abc.jpg";
+//import five from "@/assets/5.jpg";
+import six from "@/assets/6.jpg";
+import seven from "@/assets/7.jpg";
+import eight from "@/assets/8.jpg";
+import nine from "@/assets/9.jpg";
 
 const images = [
   heroEnvironment,
-  heroGreenCity,
-  heroOcean,
-  gar,
-  sar
+  //heroGreenCity,
+  //heroOcean,
+  //gar,
+  //sar,
+  few,
+  hhh,
+  abc,
+  //five,
+  six,
+  seven,
+  eight,
+  nine
 ];
 
 const GlobalHero = ({ children }) => {
