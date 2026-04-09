@@ -6,6 +6,8 @@ const router = express.Router();
 
 router.post("/register", registerUser);
 router.post("/login", loginUser);
+
+// ✅ GOOGLE LOGIN
 router.post("/google", async (req, res) => {
   try {
     const { name, email, photo } = req.body;
@@ -21,7 +23,6 @@ router.post("/google", async (req, res) => {
       });
     }
 
-    // ✅ MUST RETURN USER
     res.status(200).json({
       success: true,
       user
@@ -32,3 +33,5 @@ router.post("/google", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+
+export default router; // ✅ THIS LINE IS MUST
