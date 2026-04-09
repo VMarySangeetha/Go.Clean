@@ -46,45 +46,40 @@ const Login = () => {
   };
 
   // ✅ GOOGLE LOGIN (FIXED 🔥)
-  const handleGoogleLogin = async () => {
-    setGoogleLoading(true);
+const handleGoogleLogin = async () => {
+  try {
+    const result = await signInWithPopup(auth, provider);
+    const user = result.user;
 
-    try {
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
+    const userData = {
+      name: user.displayName,
+      email: user.email,
+      photo: user.photoURL
+    };
 
-      const userData = {
-        name: user.displayName,
-        email: user.email,
-        photo: user.photoURL
-      };
+    // ✅ CALL BACKEND
+    const res = await fetch("https://go-clean-8c5n.onrender.com/api/auth/google", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(userData)
+    });
 
-      // ✅ SEND TO BACKEND
-      const res = await fetch("https://go-clean-8c5n.onrender.com/api/auth/google", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(userData)
-      });
+    const data = await res.json();
 
-      const data = await res.json();
+    console.log("Backend user:", data); // 🔍 DEBUG
 
-      if(res.ok){
-        // ✅ STORE BACKEND USER (WITH _id)
-        localStorage.setItem("user", JSON.stringify(data.user));
+    // ✅ STORE BACKEND USER (IMPORTANT 🔥)
+    localStorage.setItem("user", JSON.stringify(data.user));
 
-        alert(`Welcome ${data.user.name}`);
-        navigate("/");
-      }else{
-        alert(data.message || "Google login failed");
-      }
+    navigate("/");
 
-    } catch (error) {
-      console.log(error);
-      alert("Google login failed");
-    }
-
+  } catch (error) {
+    console.log(error);
+    alert("Google login failed");
+  }
+};
     setGoogleLoading(false);
   };
 

@@ -6,27 +6,23 @@ const router = express.Router();
 router.post("/register", registerUser);
 router.post("/login", loginUser);
 router.post("/google", async (req, res) => {
-  const { name, email, photo } = req.body;
-
   try {
-    // 1. check if user exists
+    const { name, email, photo } = req.body;
+
     let user = await User.findOne({ email });
 
-    // 2. if not → create user
     if (!user) {
-      user = new User({
+      user = await User.create({
         name,
         email,
         photo,
-        password: "" // no password for google users
+        password: ""
       });
-
-      await user.save();
     }
 
-    // 3. return user (IMPORTANT 🔥)
+    // ✅ MUST RETURN USER
     res.status(200).json({
-      message: "Google login success",
+      success: true,
       user
     });
 
@@ -35,5 +31,3 @@ router.post("/google", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
-
-export default router;
