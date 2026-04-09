@@ -29,7 +29,6 @@ app.use("/api/certificate", certificateRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/uploads", express.static("uploads"));
 app.use("/api/story", storyRoutes);
-app.use("/api/auth", require("./routes/auth"));
 
 mongoose.connect(process.env.MONGO_URI)
 .then(() => console.log("MongoDB Connected"))
