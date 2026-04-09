@@ -47,6 +47,8 @@ const Login = () => {
 
   // ✅ GOOGLE LOGIN (FIXED 🔥)
 const handleGoogleLogin = async () => {
+  setGoogleLoading(true);
+
   try {
     const result = await signInWithPopup(auth, provider);
     const user = result.user;
@@ -68,9 +70,9 @@ const handleGoogleLogin = async () => {
 
     const data = await res.json();
 
-    console.log("Backend user:", data); // 🔍 DEBUG
+    console.log("Backend user:", data);
 
-    // ✅ STORE BACKEND USER (IMPORTANT 🔥)
+    // ✅ STORE BACKEND USER (IMPORTANT)
     localStorage.setItem("user", JSON.stringify(data.user));
 
     navigate("/");
@@ -79,9 +81,9 @@ const handleGoogleLogin = async () => {
     console.log(error);
     alert("Google login failed");
   }
+
+  setGoogleLoading(false); // ✅ INSIDE FUNCTION
 };
-    setGoogleLoading(false);
-  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-100 via-white to-green-200 px-4">
