@@ -11,7 +11,7 @@ GO.Clean is a smart municipal waste management and citizen engagement platform d
 
 ## 📌 Features
 
-### 👤 Authentication
+## 👤 Authentication
 - Email & Password Login
 - Google Sign-In using Firebase Authentication
 - Secure user session management
